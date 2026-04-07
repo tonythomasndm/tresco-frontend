@@ -4,9 +4,6 @@ import { Role } from "./types";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./pages/Signup/Signup";
 import Login from "./pages/Login/Login";
-import { useEffect, useState } from "react";
-import { supabase } from "./configs";
-import { Role } from "./types";
 
 function App() {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -18,7 +15,6 @@ function App() {
       try {
         setLoading(true);
         const { data, error } = await supabase.from("roles").select("id, name");
-
         if (error) throw error;
         setRoles(data || []);
       } catch (err: any) {
@@ -27,7 +23,6 @@ function App() {
         setLoading(false);
       }
     };
-
     fetchRoles();
   }, []);
 
@@ -43,7 +38,6 @@ function App() {
           <Route path="/signup" element={<Signup />} />
         </Routes>
       </BrowserRouter>
-      );
       <div style={{ padding: "2rem" }}>
         <h1>Roles</h1>
         <ul>

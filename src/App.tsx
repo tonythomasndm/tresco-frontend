@@ -4,6 +4,9 @@ import { Role } from "./types";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./pages/Signup/Signup";
 import Login from "./pages/Login/Login";
+import { useEffect, useState } from "react";
+import { supabase } from "./configs";
+import { Role } from "./types";
 
 function App() {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -30,6 +33,7 @@ function App() {
 
   if (loading) return <div>Loading roles...</div>;
   if (error) return <div>Error: {error}</div>;
+
   return (
     <>
       <BrowserRouter>

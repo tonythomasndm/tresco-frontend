@@ -1,10 +1,9 @@
-import React from 'react'
-
+import { Router } from "../router"
 const App = () => {
   return (
-    <div>
-      Hello World!
-    </div>
+    <>
+      <Router/>
+    </>
   )
 }
 

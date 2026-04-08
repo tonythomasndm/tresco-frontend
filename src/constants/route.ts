@@ -6,5 +6,6 @@ export const ROUTES = {
   LOADING: "/loading",
   ERROR: "/error",
   FORGOT_PASSWORD: "/forgot-password",
-  PROFILE: "/profile"
+  PROFILE: "/profile",
+  OTP: "/otp"
 } as const;

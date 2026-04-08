@@ -76,23 +76,23 @@ const SignupForm = () => {
         {/* Mobile Headings */}
         <div className="mb-8 lg:hidden text-center lg:text-left mt-[-20px]">
           <h2 className="text-[28px] font-extrabold tracking-tight text-slate-900 mb-1">Create Account</h2>
-          <p className="text-slate-500 text-sm">Start building your trust profile today.</p>
+          <p className="text-sm text-slate-500">Start building your trust profile today.</p>
         </div>
 
         {/* Desktop Headings */}
-        <div className="mb-10 hidden lg:block">
+        <div className="hidden mb-10 lg:block">
           <h2 className="text-[32px] font-extrabold tracking-tight text-[#0a152e] mb-2 font-sans">Begin your journey</h2>
-          <p className="text-slate-500 font-medium">Build your candidate trust profile in minutes.</p>
+          <p className="font-medium text-slate-500">Build your candidate trust profile in minutes.</p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm text-center">
+          <div className="p-3 mb-4 text-sm text-center text-red-600 border border-red-200 rounded-lg bg-red-50">
             {error}
           </div>
         )}
         
         {success && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm text-center">
+          <div className="p-3 mb-4 text-sm text-center text-green-700 border border-green-200 rounded-lg bg-green-50">
             Account created successfully! Welcome aboard.
           </div>
         )}
@@ -134,7 +134,7 @@ const SignupForm = () => {
              onChange={(e) => setEmail(e.target.value)}
           />
           
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-5">
+          <div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
             <FormInput 
               label={<span className="lg:hidden text-[9px]">PASSWORD</span>} 
               placeholder="••••••••••••" 
@@ -160,7 +160,7 @@ const SignupForm = () => {
             />
             
             {/* Desktop Confirm Password */}
-            <div className="hidden lg:block w-full">
+            <div className="hidden w-full lg:block">
                <FormInput 
                  label="CONFIRM" 
                  placeholder="••••••••" 
@@ -171,7 +171,7 @@ const SignupForm = () => {
                />
             </div>
             {/* Mobile Confirm Password */}
-            <div className="lg:hidden w-full">
+            <div className="w-full lg:hidden">
                <FormInput 
                  label={<span className="text-[9px]">CONFIRM PASSWORD</span>} 
                  placeholder="••••••••••••" 
@@ -200,7 +200,7 @@ const SignupForm = () => {
               />
             </div>
             <label htmlFor="terms" className="text-[12px] lg:text-xs text-slate-700 lg:text-slate-600 leading-relaxed cursor-pointer font-medium">
-              <span className="hidden lg:inline">I agree to the <a href="#" className="font-semibold text-slate-900 border-b border-transparent hover:border-slate-900 transition-colors">Terms of Service</a> and <a href="#" className="font-semibold text-slate-900 border-b border-transparent hover:border-slate-900 transition-colors">Privacy Policy</a>.</span>
+              <span className="hidden lg:inline">I agree to the <a href="#" className="font-semibold transition-colors border-b border-transparent text-slate-900 hover:border-slate-900">Terms of Service</a> and <a href="#" className="font-semibold transition-colors border-b border-transparent text-slate-900 hover:border-slate-900">Privacy Policy</a>.</span>
               <span className="inline lg:hidden text-slate-600 text-[11.5px]">By creating an account, you agree to our <a href="#" className="font-bold text-[#0B1E43]">Terms of Service</a> and acknowledge our <a href="#" className="font-bold text-[#0B1E43]">Privacy Policy</a>.</span>
             </label>
           </div>
@@ -225,10 +225,10 @@ const SignupForm = () => {
         </form>
 
         {/* Separator Mobile */}
-        <div className="mt-8 mb-6 relative flex items-center lg:hidden">
-          <div className="border-t border-slate-200 flex-grow"></div>
+        <div className="relative flex items-center mt-8 mb-6 lg:hidden">
+          <div className="flex-grow border-t border-slate-200"></div>
           <span className="px-4 text-[10px] uppercase tracking-widest text-slate-400 font-extrabold bg-[#F8FAFC]">Or continue with</span>
-          <div className="border-t border-slate-200 flex-grow"></div>
+          <div className="flex-grow border-t border-slate-200"></div>
         </div>
 
         {/* Social Buttons Mobile */}

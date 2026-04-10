@@ -51,7 +51,7 @@ const OTPForm = () => {
         </div>
 
         {/* Headings */}
-        <div className="text-center mb-10 w-full">
+        <div className="w-full mb-10 text-center">
           <h2 className="text-[28px] lg:text-[32px] font-extrabold tracking-tight text-[#0a152e] mb-3">
             Two-Step Verification
           </h2>
@@ -66,7 +66,7 @@ const OTPForm = () => {
           <form onSubmit={handleSubmit} className="space-y-7">
 
             {/* 6 Grid OTP inputs */}
-            <div className="flex justify-between items-center sm:gap-2">
+            <div className="flex items-center justify-between sm:gap-2">
               {otp.map((digit, index) => (
                 <React.Fragment key={`otp-input-${index}`}>
                   <input
@@ -99,7 +99,7 @@ const OTPForm = () => {
             </button>
 
             {/* Resend Link */}
-            <div className="text-center border-t border-slate-100 pt-6 mt-2">
+            <div className="pt-6 mt-2 text-center border-t border-slate-100">
               <span className="text-[11px] font-bold text-[#94a3b8] uppercase tracking-wider">
                 Didn't receive the code?{' '}
               </span>

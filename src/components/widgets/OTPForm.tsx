@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { ShieldCheck, ArrowRight, HelpCircle, Globe } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { ShieldCheck, ArrowRight } from 'lucide-react';
+import {  useNavigate } from 'react-router-dom';
 
 const OTPForm = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -40,7 +40,7 @@ const OTPForm = () => {
   };
 
   return (
-    <div className="w-full flex justify-center lg:justify-start lg:ml-[10%] py-10 px-6 min-h-[70vh] relative bg-[#f8fafc] lg:bg-transparent flex-col items-center">
+    <div className="w-full flex justify-center py-10 px-6 min-h-[70vh] relative bg-[#f8fafc] flex-col items-center">
 
       {/* Top Main Block */}
       <div className="w-full max-w-[420px] flex flex-col items-center justify-center relative z-10">
@@ -51,7 +51,7 @@ const OTPForm = () => {
         </div>
 
         {/* Headings */}
-        <div className="text-center mb-10 w-full">
+        <div className="w-full mb-10 text-center">
           <h2 className="text-[28px] lg:text-[32px] font-extrabold tracking-tight text-[#0a152e] mb-3">
             Two-Step Verification
           </h2>
@@ -66,7 +66,7 @@ const OTPForm = () => {
           <form onSubmit={handleSubmit} className="space-y-7">
 
             {/* 6 Grid OTP inputs */}
-            <div className="flex justify-between items-center sm:gap-2">
+            <div className="flex items-center justify-between sm:gap-2">
               {otp.map((digit, index) => (
                 <React.Fragment key={`otp-input-${index}`}>
                   <input
@@ -99,7 +99,7 @@ const OTPForm = () => {
             </button>
 
             {/* Resend Link */}
-            <div className="text-center border-t border-slate-100 pt-6 mt-2">
+            <div className="pt-6 mt-2 text-center border-t border-slate-100">
               <span className="text-[11px] font-bold text-[#94a3b8] uppercase tracking-wider">
                 Didn't receive the code?{' '}
               </span>
@@ -117,18 +117,7 @@ const OTPForm = () => {
       </div>
 
       {/* Footer Links */}
-      <div className="absolute bottom-8 lg:bottom-10 w-full flex items-center justify-center space-x-6 text-[10px] font-bold text-[#94a3b8] uppercase tracking-widest">
-        <Link to="/support" className="flex items-center hover:text-[#64748b] transition-colors">
-          <HelpCircle size={14} className="mr-1.5 opacity-80" strokeWidth={2.5} />
-          Support
-        </Link>
-        <div className="w-1 h-1 bg-[#cbd5e1] rounded-full"></div>
-        <Link to="/privacy" className="flex items-center hover:text-[#64748b] transition-colors">
-          <Globe size={14} className="mr-1.5 opacity-80" strokeWidth={2.5} />
-          Privacy
-        </Link>
-      </div>
-
+     
     </div>
   );
 };

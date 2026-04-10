@@ -14,6 +14,7 @@ const SignupForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [role, setRole] = useState<'candidate' | 'recruiter'>('candidate');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -41,7 +42,7 @@ const SignupForm = () => {
             name, 
             email, 
             password, // NOTE: Proceeding with raw password as specifically requested
-            role: 'candidate', // Default role for now, as user said to skip role parts, a fallback helps
+            role,
           }
         ]);
 
@@ -82,7 +83,7 @@ const SignupForm = () => {
         {/* Desktop Headings */}
         <div className="hidden mb-10 lg:block">
           <h2 className="text-[32px] font-extrabold tracking-tight text-[#0a152e] mb-2 font-sans">Begin your journey</h2>
-          <p className="font-medium text-slate-500">Build your candidate trust profile in minutes.</p>
+          <p className="font-medium text-slate-500">Build your trust profile in minutes.</p>
         </div>
 
         {error && (
@@ -98,6 +99,9 @@ const SignupForm = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-5">
+          
+          {/* Role Selection */}
+         
           <FormInput 
             label={<span className="lg:hidden text-[9px]">FULL NAME</span>} 
             placeholder="Alexander Pierce" 
@@ -133,7 +137,37 @@ const SignupForm = () => {
              value={email}
              onChange={(e) => setEmail(e.target.value)}
           />
-          
+           <div className="flex items-center gap-6 mb-2 py-1 lg:py-2">
+            <label className="flex items-center gap-2.5 cursor-pointer group">
+              <div className="relative flex items-center justify-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="candidate"
+                  checked={role === 'candidate'}
+                  onChange={() => setRole('candidate')}
+                  className="peer appearance-none w-5 h-5 border-[2px] border-slate-300 rounded-full bg-transparent checked:border-[#0B1E43] transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0B1E43]/20 focus:ring-offset-1"
+                />
+                <div className="absolute w-2.5 h-2.5 rounded-full bg-[#0B1E43] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
+              </div>
+              <span className="text-[13.5px] lg:text-[14px] font-medium text-slate-700 group-hover:text-slate-900 transition-colors">Candidate</span>
+            </label>
+
+            <label className="flex items-center gap-2.5 cursor-pointer group">
+              <div className="relative flex items-center justify-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="recruiter"
+                  checked={role === 'recruiter'}
+                  onChange={() => setRole('recruiter')}
+                  className="peer appearance-none w-5 h-5 border-[2px] border-slate-300 rounded-full bg-transparent checked:border-[#0B1E43] transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0B1E43]/20 focus:ring-offset-1"
+                />
+                <div className="absolute w-2.5 h-2.5 rounded-full bg-[#0B1E43] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"></div>
+              </div>
+              <span className="text-[13.5px] lg:text-[14px] font-medium text-slate-700 group-hover:text-slate-900 transition-colors">Recruiter</span>
+            </label>
+          </div>
           <div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
             <FormInput 
               label={<span className="lg:hidden text-[9px]">PASSWORD</span>} 
@@ -182,6 +216,7 @@ const SignupForm = () => {
                />
             </div>
           </div>
+          
 
           <div className="pt-2 flex items-start lg:items-center gap-3 bg-[#f8fafc] lg:bg-transparent p-4 lg:p-0 rounded-xl lg:rounded-none border border-slate-100 lg:border-none">
             <div className="flex items-center lg:h-5">

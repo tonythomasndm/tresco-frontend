@@ -1,4 +1,4 @@
 export const isAuthenticated = () => {
   // TODO: replace with Supabase session
-  return false;
+  return true;
 };

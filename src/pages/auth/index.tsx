@@ -1,4 +1,4 @@
-import Login from "./Login";
-import Signup from "./Signup";
-import ForgotPassword from "./ForgotPassword";
-import OTP from "./OTP";
+export { default as Login } from "./Login";
+export { default as Signup } from "./Signup";
+export { default as ForgotPassword } from "./ForgotPassword";
+export { default as OTP } from "./OTP";

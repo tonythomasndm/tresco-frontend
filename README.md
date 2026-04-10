@@ -1,4 +1,4 @@
-# 🚀 Trustcore - Development Guidelines
+# 🚀 Tresco - Development Guidelines
 
 This repository follows strict development standards to ensure scalability, readability, and maintainability.
 
@@ -286,4 +286,4 @@ npm run dev
 
 ---
 
-💡 **Trustcore is built for scale. Write code like it will serve millions.**
+💡 **Tresco is built for scale. Write code like it will serve millions.**

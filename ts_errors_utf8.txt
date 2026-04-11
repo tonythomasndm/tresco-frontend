@@ -1,0 +1,10 @@
+﻿src/pages/auth/index.tsx(1,1): error TS6133: 'Login' is declared but its value is never read.
+src/pages/auth/index.tsx(2,1): error TS6133: 'Signup' is declared but its value is never read.
+src/pages/auth/index.tsx(3,1): error TS6133: 'ForgotPassword' is declared but its value is never read.
+src/pages/auth/index.tsx(4,1): error TS6133: 'OTP' is declared but its value is never read.
+src/pages/auth/OTP.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/Dashboard/components/AuthenticityWidget.tsx(61,34): error TS6133: 'entry' is declared but its value is never read.
+src/pages/Dashboard/Dashboard.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/Error/Error.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/Home/Home.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/Loader/Loader.tsx(1,1): error TS6133: 'React' is declared but its value is never read.

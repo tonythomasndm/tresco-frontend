@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { FormEvent } from 'react';
 import { User, Mail, Lock, EyeOff, Eye, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
 import FormInput from './FormInput';
@@ -15,6 +16,7 @@ const SignupForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [role, setRole] = useState<'candidate' | 'recruiter'>('candidate');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -51,7 +53,15 @@ const SignupForm = () => {
       }
 
       setSuccess(true);
-      // Reset form on success or redirect
+      
+      // Store user info in localStorage for mock persistence (required by Profile page)
+      localStorage.setItem('user', JSON.stringify({ name, email, role }));
+
+      // Reset form or redirect
+      setTimeout(() => {
+        navigate('/connect');
+      }, 1500);
+      
       setName('');
       setEmail('');
       setPassword('');

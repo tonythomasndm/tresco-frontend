@@ -13,6 +13,8 @@ const OTP = lazy(() => import("../pages/auth/OTP"));
 
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
 const Profile = lazy(() => import("../pages/Profile/Profile"));
+const ConnectPages = lazy(() => import("../pages/ConnectPages"));
+const Processing = lazy(() => import("../pages/Processing"));
 
 const Error = lazy(() => import("../pages/Error/Error"));
 
@@ -46,6 +48,28 @@ const Router = () => {
             element={
               isAuthenticated() ? (
                 <Profile />
+              ) : (
+                <Navigate to={ROUTES.LOGIN} replace />
+              )
+            }
+          />
+
+          <Route
+            path={ROUTES.CONNECT}
+            element={
+              isAuthenticated() ? (
+                <ConnectPages />
+              ) : (
+                <Navigate to={ROUTES.LOGIN} replace />
+              )
+            }
+          />
+
+          <Route
+            path={ROUTES.PROCESSING}
+            element={
+              isAuthenticated() ? (
+                <Processing />
               ) : (
                 <Navigate to={ROUTES.LOGIN} replace />
               )

@@ -91,36 +91,36 @@ const ConnectPages = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="flex flex-col min-h-screen font-sans bg-slate-50">
       
       {/* Top Navbar */}
-      <nav className="bg-white px-4 py-4 flex items-center justify-between border-b border-slate-100 sticky top-0 z-10">
+      {/* <nav className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 bg-white border-b border-slate-100">
         <div className="flex items-center gap-2">
            <div className="w-8 h-8 bg-[#0a152e] rounded flex items-center justify-center">
              <UserIcon className="w-5 h-5 text-blue-400" />
            </div>
-           <span className="font-bold text-blue-600 tracking-tight text-lg">TrustScore</span>
+           <span className="text-lg font-bold tracking-tight text-blue-600">TrustScore</span>
         </div>
         <button className="text-slate-500 hover:text-slate-800">
            <Search className="w-5 h-5" />
         </button>
-      </nav>
+      </nav> */}
 
       {/* Main Content */}
-      <main className="flex-1 max-w-2xl w-full mx-auto px-4 py-8 pb-24">
+      <main className="flex-1 w-full max-w-2xl px-4 py-8 pb-24 mx-auto">
         
         <div className="mb-8">
           <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#0a152e] tracking-tight leading-tight mb-3">
             Connect your<br className="hidden sm:block"/> professional pages
           </h1>
-          <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
+          <p className="text-sm leading-relaxed text-slate-500 sm:text-base">
             Synchronize your digital footprint to generate a high-fidelity recruitment profile. 
             We aggregate data from these sources to build your TrustScore.
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 rounded-xl border border-red-100 flex items-start gap-3">
+          <div className="flex items-start gap-3 p-4 mb-6 border border-red-100 bg-red-50 rounded-xl">
             <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
             <p className="text-sm text-red-700">{error}</p>
           </div>
@@ -148,10 +148,10 @@ const ConnectPages = () => {
 
         <div className="space-y-6">
           {/* LinkedIn Card */}
-          <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100">
+          <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                 <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center">
+                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50">
                     <LinkIcon className="w-5 h-5 text-blue-600" />
                  </div>
                  <div>
@@ -169,18 +169,18 @@ const ConnectPages = () => {
                  placeholder="linkedin.com/in/username"
                  value={links.linkedin}
                  onChange={(e) => handleChange('linkedin', e.target.value)}
-                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-700 font-medium placeholder:text-slate-400 placeholder:font-normal"
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
                />
-               <button className="w-full mt-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl py-3 transition-colors">
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
                  {links.linkedin ? 'Link Added' : 'Add link'}
                </button>
             </div>
           </div>
 
           {/* GitHub Card */}
-          <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100">
+          <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center gap-3 mb-4">
-               <div className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100">
+               <div className="flex items-center justify-center w-10 h-10 border rounded-full bg-slate-50 border-slate-100">
                   <Code className="w-5 h-5 text-slate-700" />
                </div>
                <div>
@@ -194,18 +194,18 @@ const ConnectPages = () => {
                  placeholder="github.com/username"
                  value={links.github}
                  onChange={(e) => handleChange('github', e.target.value)}
-                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 transition-all text-slate-700 font-medium placeholder:text-slate-400 placeholder:font-normal"
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
                />
-               <button className="w-full mt-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl py-3 transition-colors">
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
                  {links.github ? 'Link Added' : 'Add link'}
                </button>
             </div>
           </div>
 
           {/* Kaggle Card */}
-          <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100">
+          <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center gap-3 mb-4">
-               <div className="w-10 h-10 bg-cyan-50 rounded-full flex items-center justify-center">
+               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-50">
                   <Database className="w-5 h-5 text-cyan-600" />
                </div>
                <div>
@@ -219,18 +219,18 @@ const ConnectPages = () => {
                  placeholder="kaggle.com/username"
                  value={links.kaggle}
                  onChange={(e) => handleChange('kaggle', e.target.value)}
-                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 transition-all text-slate-700 font-medium placeholder:text-slate-400 placeholder:font-normal"
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
                />
-               <button className="w-full mt-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl py-3 transition-colors">
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
                  {links.kaggle ? 'Link Added' : 'Add link'}
                </button>
             </div>
           </div>
 
           {/* LeetCode Card */}
-          <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100">
+          <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center gap-3 mb-4">
-               <div className="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center">
+               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-orange-50">
                   <Code2 className="w-5 h-5 text-orange-500" />
                </div>
                <div>
@@ -244,19 +244,19 @@ const ConnectPages = () => {
                  placeholder="leetcode.com/username"
                  value={links.leetcode}
                  onChange={(e) => handleChange('leetcode', e.target.value)}
-                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all text-slate-700 font-medium placeholder:text-slate-400 placeholder:font-normal"
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
                />
-               <button className="w-full mt-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl py-3 transition-colors">
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
                  {links.leetcode ? 'Link Added' : 'Add link'}
                </button>
             </div>
           </div>
 
           {/* Additional Repositories Toggle */}
-          <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100 mt-8">
+          <div className="p-5 mt-8 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
              <div className="flex items-center gap-2 mb-5">
                <Plus className="w-4 h-4 text-blue-600 bg-blue-50 rounded-full p-0.5" />
-               <h3 className="font-bold text-slate-800 text-sm">Additional Repositories</h3>
+               <h3 className="text-sm font-bold text-slate-800">Additional Repositories</h3>
              </div>
              
              <div className="flex flex-wrap gap-3">
@@ -310,14 +310,14 @@ const ConnectPages = () => {
              </div>
 
              {/* Expanded Inputs based on toggles */}
-             <div className="space-y-3 mt-5">
+             <div className="mt-5 space-y-3">
                {additionalRepos.stackoverflow && (
                  <input 
                    type="url" 
                    placeholder="stackoverflow.com/users/..."
                    value={links.stackoverflow}
                    onChange={(e) => handleChange('stackoverflow', e.target.value)}
-                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                  />
                )}
                {additionalRepos.behance && (
@@ -326,7 +326,7 @@ const ConnectPages = () => {
                    placeholder="behance.net/..."
                    value={links.behance}
                    onChange={(e) => handleChange('behance', e.target.value)}
-                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                  />
                )}
                {additionalRepos.personalWebsite && (
@@ -335,7 +335,7 @@ const ConnectPages = () => {
                    placeholder="https://yourwebsite.com"
                    value={links.personalWebsite}
                    onChange={(e) => handleChange('personalWebsite', e.target.value)}
-                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                  />
                )}
                {additionalRepos.otherUrl && (
@@ -348,23 +348,23 @@ const ConnectPages = () => {
                      newOther[0] = e.target.value;
                      setLinks(p => ({ ...p, other: newOther }));
                    }}
-                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                  />
                )}
              </div>
           </div>
           
           {/* Action Buttons */}
-          <div className="pt-6 pb-20 flex justify-end gap-4">
+          <div className="flex justify-end gap-4 pt-6 pb-20">
              <button
                onClick={() => navigate('/processing')}
-               className="px-6 py-3 rounded-xl font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors"
+               className="px-6 py-3 font-medium transition-colors bg-white border rounded-xl text-slate-600 border-slate-200 hover:bg-slate-50"
              >
                Skip
              </button>
              <button
                onClick={handleSave}
-               className="px-6 py-3 rounded-xl font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm"
+               className="px-6 py-3 font-medium text-white transition-colors bg-blue-600 shadow-sm rounded-xl hover:bg-blue-700"
              >
                Save Changes
              </button>
@@ -374,20 +374,20 @@ const ConnectPages = () => {
 
       {/* Mock Bottom Nav (matches design) */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-6 py-3 flex justify-between sm:justify-center sm:gap-16 items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)] z-20">
-         <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-600 transition-colors">
+         <button className="flex flex-col items-center gap-1 transition-colors text-slate-400 hover:text-blue-600">
             <Database className="w-5 h-5" />
             <span className="text-[9px] font-bold uppercase tracking-wider">Store</span>
          </button>
-         <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-600 transition-colors">
+         <button className="flex flex-col items-center gap-1 transition-colors text-slate-400 hover:text-blue-600">
             <Search className="w-5 h-5" />
             <span className="text-[9px] font-bold uppercase tracking-wider">Analysis</span>
          </button>
-         <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-600 transition-colors">
+         <button className="flex flex-col items-center gap-1 transition-colors text-slate-400 hover:text-blue-600">
             <UserIcon className="w-5 h-5" />
             <span className="text-[9px] font-bold uppercase tracking-wider">Candidates</span>
          </button>
          <button className="flex flex-col items-center gap-1 text-blue-600 bg-blue-50 px-4 py-1.5 rounded-lg transition-colors">
-            <div className="w-5 h-5 flex items-center justify-center">
+            <div className="flex items-center justify-center w-5 h-5">
               <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" className="w-5 h-5 text-blue-600">
                 <path d="M12 2L2 7l10 5 10-5-10-5z" />
                 <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>

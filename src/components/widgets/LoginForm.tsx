@@ -41,7 +41,7 @@ const LoginForm = () => {
       localStorage.setItem('user', JSON.stringify(data));
       setSuccess(true);
       // Redirect to profile after a brief delay
-      setTimeout(() => navigate('/profile'), 1000);
+      setTimeout(() => navigate('/'), 1000);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -62,23 +62,23 @@ const LoginForm = () => {
         {/* Mobile Headings */}
         <div className="mb-8 lg:hidden text-center lg:text-left mt-[-20px]">
           <h2 className="text-[28px] font-extrabold tracking-tight text-slate-900 mb-1">Welcome Back</h2>
-          <p className="text-slate-500 text-sm">Enter your credentials to continue.</p>
+          <p className="text-sm text-slate-500">Enter your credentials to continue.</p>
         </div>
 
         {/* Desktop Headings */}
-        <div className="mb-10 hidden lg:block">
+        <div className="hidden mb-10 lg:block">
           <h2 className="text-[32px] font-extrabold tracking-tight text-[#0a152e] mb-2 font-sans">Welcome Back</h2>
-          <p className="text-slate-500 font-medium">Enter your credentials to access your dashboard.</p>
+          <p className="font-medium text-slate-500">Enter your credentials to access your dashboard.</p>
         </div>
         
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm text-center">
+          <div className="p-3 mb-4 text-sm text-center text-red-600 border border-red-200 rounded-lg bg-red-50">
             {error}
           </div>
         )}
         
         {success && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm text-center">
+          <div className="p-3 mb-4 text-sm text-center text-green-700 border border-green-200 rounded-lg bg-green-50">
             Login successful! Welcome back.
           </div>
         )}
@@ -108,13 +108,13 @@ const LoginForm = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             endIcon={
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="focus:outline-none flex items-center justify-center h-full">
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="flex items-center justify-center h-full focus:outline-none">
                 {showPassword ? <Eye className="w-[18px] h-[18px]" /> : <EyeOff className="w-[18px] h-[18px]" />}
               </button>
             }
           />
 
-          <div className="pt-2 items-center hidden lg:flex">
+          <div className="items-center hidden pt-2 lg:flex">
              <input
                id="remember"
                type="checkbox"
@@ -137,7 +137,7 @@ const LoginForm = () => {
                 </>
               ) : (
                 <>
-                   Log In <ArrowRight className="w-5 h-5 lg:hidden ml-1 group-hover:translate-x-1 transition-transform" />
+                   Log In <ArrowRight className="w-5 h-5 ml-1 transition-transform lg:hidden group-hover:translate-x-1" />
                 </>
               )}
             </button>
@@ -145,10 +145,10 @@ const LoginForm = () => {
         </form>
 
         {/* Separator */}
-        <div className="mt-8 mb-6 relative flex items-center">
-          <div className="border-t border-slate-200 flex-grow"></div>
+        <div className="relative flex items-center mt-8 mb-6">
+          <div className="flex-grow border-t border-slate-200"></div>
           <span className="px-4 text-[11px] lg:text-[12px] text-slate-500 font-semibold bg-transparent">Or continue with</span>
-          <div className="border-t border-slate-200 flex-grow"></div>
+          <div className="flex-grow border-t border-slate-200"></div>
         </div>
 
         {/* Social Buttons */}
@@ -167,9 +167,9 @@ const LoginForm = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-8 lg:mt-10 text-center">
+        <div className="mt-8 text-center lg:mt-10">
           <p className="text-slate-600 text-[13px] font-medium lg:text-sm">
-            <span className="lg:hidden text-slate-500 tracking-wide">Don't have an account? <Link to="/signup" className="text-[#0a152e] font-bold hover:underline ml-1 text-sm tracking-normal">Sign Up</Link></span>
+            <span className="tracking-wide lg:hidden text-slate-500">Don't have an account? <Link to="/signup" className="text-[#0a152e] font-bold hover:underline ml-1 text-sm tracking-normal">Sign Up</Link></span>
             <span className="hidden lg:inline">New to the platform? <Link to="/signup" className="text-[#0a152e] font-extrabold hover:underline ml-1">Create an account</Link></span>
           </p>
         </div>

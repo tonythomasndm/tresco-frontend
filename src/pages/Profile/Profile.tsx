@@ -56,7 +56,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-[#f1f5f9] to-[#e8f0fe]">
       {/* Top Nav */}
-      <nav className="bg-[#03102a] text-white px-6 py-4 flex items-center justify-between shadow-lg">
+      {/* <nav className="bg-[#03102a] text-white px-6 py-4 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5 text-white stroke-[2.5]">
@@ -72,7 +72,7 @@ const Profile = () => {
           <LogOut className="w-4 h-4" />
           <span className="hidden sm:inline">Sign Out</span>
         </button>
-      </nav>
+      </nav> */}
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
         {/* Profile Header Card */}

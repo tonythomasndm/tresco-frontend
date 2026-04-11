@@ -1,8 +1,11 @@
+
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { ROUTES } from "../constants";
 import Loader from "../pages/Loader/Loader";
 import { isAuthenticated } from "../utils/auth";
+import { AppLayout } from "../components/layout/AppLayout";
 
 // Lazy loading
 const Home = lazy(() => import("../pages/Home/Home"));
@@ -31,30 +34,19 @@ const Router = () => {
           <Route path={ROUTES.OTP} element={<OTP />} />
           <Route path={ROUTES.ERROR} element={<Error />} />
 
-          {/* 🔒 Protected Routes */}
+          {/* 🔒 Protected Routes with Layout */}
           <Route
-            path={ROUTES.DASHBOARD}
             element={
               isAuthenticated() ? (
-                <Dashboard />
+                <AppLayout />
               ) : (
                 <Navigate to={ROUTES.LOGIN} replace />
               )
             }
-          />
-
-          <Route
-            path={ROUTES.PROFILE}
-            element={
-              isAuthenticated() ? (
-                <Profile />
-              ) : (
-                <Navigate to={ROUTES.LOGIN} replace />
-              )
-            }
-          />
-
-          <Route
+          >
+            <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+            <Route path={ROUTES.PROFILE} element={<Profile />} />
+            <Route
             path={ROUTES.CONNECT}
             element={
               isAuthenticated() ? (
@@ -64,6 +56,9 @@ const Router = () => {
               )
             }
           />
+          </Route>
+
+          
 
           <Route
             path={ROUTES.PROCESSING}

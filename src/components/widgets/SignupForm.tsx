@@ -59,7 +59,7 @@ const SignupForm = () => {
 
       // Reset form or redirect
       setTimeout(() => {
-        navigate('/connect');
+        navigate('/');
       }, 1500);
       
       setName('');
@@ -147,7 +147,7 @@ const SignupForm = () => {
              value={email}
              onChange={(e) => setEmail(e.target.value)}
           />
-           <div className="flex items-center gap-6 mb-2 py-1 lg:py-2">
+           <div className="flex items-center gap-6 py-1 mb-2 lg:py-2">
             <label className="flex items-center gap-2.5 cursor-pointer group">
               <div className="relative flex items-center justify-center">
                 <input

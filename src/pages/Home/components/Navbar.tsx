@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Menu, X, LogOut } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -43,15 +42,18 @@ const Navbar = () => {
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <img src="/Logo.svg" alt="logo" className="object-contain w-8 h-8" />
+          <div className="flex items-center flex-shrink-0 gap-2">
+            <img
+              src="/Logo.svg"
+              alt="logo"
+              className="object-contain w-8 h-8"
+            />
             <Link
               to="/"
               className="text-xl font-extrabold text-[#0a152e] tracking-tight"
             >
               TrustSco
             </Link>
-            
           </div>
 
           {/* Desktop Nav */}
@@ -86,8 +88,8 @@ const Navbar = () => {
           <div className="items-center hidden space-x-5 md:flex">
             {isLoggedIn ? (
               <div className="relative flex items-center gap-4">
-                <div 
-                  className="pl-4 border-l border-slate-200 cursor-pointer" 
+                <div
+                  className="pl-4 border-l cursor-pointer border-slate-200"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
                 >
                   <div className="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-[#1c3c66] rounded-full hover:shadow-md transition">
@@ -169,7 +171,9 @@ const Navbar = () => {
                     <div className="flex items-center justify-center w-10 h-10 text-lg font-bold text-white bg-[#1c3c66] rounded-full">
                       {userName.charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-sm font-medium text-slate-700">Signed in</span>
+                    <span className="text-sm font-medium text-slate-700">
+                      Signed in
+                    </span>
                   </div>
                   <Link
                     to="/connect"

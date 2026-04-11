@@ -1,8 +1,16 @@
+import { useState, useEffect } from 'react';
 import { ArrowRight, Activity, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import heroImage from '../../../assets/hero_abstract_net.png';
 
 const HeroSection = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    setIsLoggedIn(!!user);
+  }, []);
+
   return (
     <section className="relative w-full bg-white pt-20 pb-20 lg:pt-32 lg:pb-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -24,13 +32,11 @@ const HeroSection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Link to="/signup" className="flex items-center justify-center gap-2 bg-[#1c3c66] text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-[#122b4f] transition-all shadow-lg shadow-[#1c3c66]/20">
-                Get Started
+              <Link to={isLoggedIn ? "/connect" : "/login"} className="flex items-center justify-center gap-2 bg-[#1c3c66] text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-[#122b4f] transition-all shadow-lg shadow-[#1c3c66]/20">
+                {isLoggedIn ? "Go to Analysis" : "Get Started"}
                 <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
-              <button className="flex items-center justify-center bg-slate-100 text-slate-700 px-8 py-3.5 rounded-lg font-semibold hover:bg-slate-200 transition-all border border-slate-200">
-                View Sample Report
-              </button>
+             
             </div>
           </div>
 

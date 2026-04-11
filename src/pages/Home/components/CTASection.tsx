@@ -1,6 +1,14 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 const CTASection = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    setIsLoggedIn(!!user);
+  }, []);
   return (
     <section id="how-it-works" className="w-full bg-[#f8fafc] py-20 pb-32">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,10 +25,11 @@ const CTASection = () => {
               Join 500+ forward-thinking teams using TrustScore to build high-performance cultures.
             </p>
             <Link 
-              to="/signup" 
-              className="inline-block bg-white text-[#1c3c66] font-bold px-10 py-4 rounded-xl hover:bg-slate-50 transition-colors shadow-lg hover:shadow-xl"
+              to={isLoggedIn ? "/connect" : "/login"} 
+              className="inline-flex items-center justify-center gap-2 bg-[#0a152e] text-white px-10 py-4 rounded-xl font-bold hover:bg-slate-900 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
             >
-              Get Started Now
+              {isLoggedIn ? "Go to Analysis" : "Get Started Now"}
+              <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
         </div>

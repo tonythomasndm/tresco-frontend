@@ -29,9 +29,9 @@ const Dashboard = () => {
 
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col font-sans pb-24">
+      <div className="flex flex-col min-h-screen pb-24 font-sans bg-slate-50">
         <MobileTopNav />
-        <main className="px-4 py-2 space-y-4 flex-1">
+        <main className="flex-1 px-4 py-2 space-y-4">
           <MobileAuthenticityWidget />
           <AttributeComparisonWidget />
           <MobileSourceHealthWidget />
@@ -43,7 +43,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans">
+    <div className="flex flex-col min-h-screen font-sans bg-white">
       <TopNav />
       
       <div className="flex flex-1 overflow-hidden">
@@ -51,7 +51,7 @@ const Dashboard = () => {
         <SideNav />
         
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto bg-slate-50/20 p-8 lg:p-10">
+        <main className="flex-1 p-8 overflow-y-auto bg-slate-50/20 lg:p-10">
           <div className="max-w-[1400px] mx-auto">
             
             <div className="grid grid-cols-12 gap-6 lg:gap-8">

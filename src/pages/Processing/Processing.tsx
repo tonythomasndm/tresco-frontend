@@ -18,6 +18,7 @@ const MAX_WAIT_MS = 240000; // 2 minutes max before retry screen
 const POLL_INTERVAL_MS = 5000;
 const REQUEST_TIMEOUT_MS = 10000;
 const SCORE_API_URL = "/api/generate-score";
+const MAX_BODY_LOG_CHARS = 1200;
 
 const Processing = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const Processing = () => {
   const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const requestTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const pollAttemptRef = useRef(0);
 
   const statusMessages = [
     {
@@ -115,7 +117,28 @@ const Processing = () => {
 
   const pollForScore = useCallback(async () => {
     const userId = getStoredUserId();
+    const attempt = pollAttemptRef.current + 1;
+    pollAttemptRef.current = attempt;
+    const startedAt = Date.now();
+
+    console.info("[Processing] Poll attempt started", {
+      attempt,
+      requestCycle,
+      userIdPresent: Boolean(userId),
+      apiUrl: SCORE_API_URL,
+      requestTimeoutMs: REQUEST_TIMEOUT_MS,
+      pollIntervalMs: POLL_INTERVAL_MS,
+    });
+
     if (!userId || isCompleteRef.current || hasTimedOutRef.current) {
+      console.warn("[Processing] Poll stopped early", {
+        attempt,
+        reason: !userId
+          ? "missing_user_id"
+          : isCompleteRef.current
+            ? "already_complete"
+            : "already_timed_out",
+      });
       hasTimedOutRef.current = true;
       setHasTimedOut(true);
       cleanupPendingWork();
@@ -125,6 +148,10 @@ const Processing = () => {
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
     requestTimeoutRef.current = setTimeout(() => {
+      console.warn("[Processing] Poll request timeout reached; aborting request", {
+        attempt,
+        timeoutMs: REQUEST_TIMEOUT_MS,
+      });
       abortController.abort();
     }, REQUEST_TIMEOUT_MS);
 
@@ -134,26 +161,94 @@ const Processing = () => {
         headers: {
           "content-type": "application/json",
         },
+        cache: "no-store",
         body: JSON.stringify({ user_id: userId }),
         signal: abortController.signal,
       });
 
-      console.log("RAW RESPONSE:", response);
-      console.log("STATUS:", response.status);
+      const durationMs = Date.now() - startedAt;
+      const responseContentType = response.headers.get("content-type") || "";
+      const rawBody = await response.text();
+      const bodyPreview =
+        rawBody.length > MAX_BODY_LOG_CHARS
+          ? `${rawBody.slice(0, MAX_BODY_LOG_CHARS)}...<truncated>`
+          : rawBody;
 
-      const data = await response.json();
-      console.log("API DATA:", data);
-      if (data?.status === "success" && data?.data) {
-        localStorage.setItem("trustscore_data", JSON.stringify(data.data));
+      console.info("[Processing] Poll response received", {
+        attempt,
+        durationMs,
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        responseUrl: response.url,
+        contentType: responseContentType,
+        bodyLength: rawBody.length,
+      });
+      console.debug("[Processing] Poll response body preview", {
+        attempt,
+        bodyPreview,
+      });
+
+      if (!response.ok) {
+        console.error("[Processing] Poll response is not ok", {
+          attempt,
+          status: response.status,
+          statusText: response.statusText,
+          bodyPreview,
+        });
+      }
+
+      let data: unknown = null;
+      try {
+        data = rawBody ? JSON.parse(rawBody) : null;
+      } catch (parseError) {
+        console.error("[Processing] Failed to parse poll response JSON", {
+          attempt,
+          parseError,
+          contentType: responseContentType,
+          bodyPreview,
+        });
+      }
+
+      console.info("[Processing] Parsed poll payload", {
+        attempt,
+        data,
+      });
+
+      if (
+        data &&
+        typeof data === "object" &&
+        "status" in data &&
+        "data" in data &&
+        (data as { status?: string }).status === "success" &&
+        (data as { data?: unknown }).data
+      ) {
+        const payload = data as { data: unknown };
+        localStorage.setItem("trustscore_data", JSON.stringify(payload.data));
+        console.info("[Processing] Poll marked complete; trustscore saved", {
+          attempt,
+        });
         isCompleteRef.current = true;
         setIsComplete(true);
         setProgress(100);
         cleanupPendingWork();
         return;
       }
+
+      console.info("[Processing] Poll response did not include completed score yet", {
+        attempt,
+      });
     } catch (error) {
       if ((error as Error).name !== "AbortError") {
-        console.error("Error while polling score API:", error);
+        console.error("[Processing] Error while polling score API", {
+          attempt,
+          error,
+        });
+      } else {
+        console.warn("[Processing] Poll request aborted", {
+          attempt,
+          durationMs: Date.now() - startedAt,
+        });
       }
     } finally {
       if (requestTimeoutRef.current) {
@@ -165,15 +260,20 @@ const Processing = () => {
     }
 
     if (!isCompleteRef.current && !hasTimedOutRef.current) {
+      console.info("[Processing] Scheduling next poll attempt", {
+        nextAttempt: pollAttemptRef.current + 1,
+        waitMs: POLL_INTERVAL_MS,
+      });
       pollTimeoutRef.current = setTimeout(() => {
         void pollForScore();
       }, POLL_INTERVAL_MS);
     }
-  }, [cleanupPendingWork, getStoredUserId]);
+  }, [cleanupPendingWork, getStoredUserId, requestCycle]);
 
   useEffect(() => {
     cleanupPendingWork();
     localStorage.removeItem("trustscore_data");
+    pollAttemptRef.current = 0;
     startTimeRef.current = Date.now();
     isCompleteRef.current = false;
     hasTimedOutRef.current = false;
@@ -182,12 +282,22 @@ const Processing = () => {
     setIsComplete(false);
     setHasTimedOut(false);
 
+    console.info("[Processing] Starting processing cycle", {
+      requestCycle,
+      maxWaitMs: MAX_WAIT_MS,
+      totalDurationMs: TOTAL_DURATION_MS,
+    });
+
     animFrameRef.current = requestAnimationFrame(updateProgress);
     statusIntervalRef.current = setInterval(() => {
       setStatusIndex((prev) => (prev + 1) % statusMessages.length);
     }, 4000);
 
     overallTimeoutRef.current = setTimeout(() => {
+      console.error("[Processing] Overall processing timeout reached", {
+        requestCycle,
+        maxWaitMs: MAX_WAIT_MS,
+      });
       hasTimedOutRef.current = true;
       setHasTimedOut(true);
       cleanupPendingWork();

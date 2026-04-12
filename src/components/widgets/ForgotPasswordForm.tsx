@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Mail, Lock, EyeOff, Eye, ArrowRight, Loader2, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, EyeOff, Eye, ArrowRight, ShieldCheck } from 'lucide-react';
 import FormInput from './FormInput';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../configs/supaClient';
+import Loader from '../../pages/Loader/Loader';
 
 const ForgotPasswordForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -156,9 +157,7 @@ const ForgotPasswordForm = () => {
                 className="w-full bg-[#03102a] text-white py-[14px] lg:py-3.5 rounded-xl lg:rounded-lg font-semibold tracking-wide transition-all duration-200 hover:bg-[#0a1835] focus:ring-4 focus:ring-blue-900/20 shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" /> Updating Password...
-                  </>
+                  <Loader showBrand={false} label="Updating password..." size="sm" className="gap-2 py-0 text-white [&_p]:text-white/90" />
                 ) : (
                   <>
                     Reset Password <ArrowRight className="w-5 h-5 lg:hidden ml-1 group-hover:translate-x-1 transition-transform" />

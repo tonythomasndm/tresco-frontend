@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Mail, Lock, EyeOff, Eye, ArrowRight, Loader2 } from 'lucide-react';
+import { Mail, Lock, EyeOff, Eye, ArrowRight } from 'lucide-react';
 import FormInput from './FormInput';
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from '../../configs/supaClient';
 import TermsModal from './TermsModal';
+import Loader from '../../pages/Loader/Loader';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -145,9 +146,7 @@ const LoginForm = () => {
                className="w-full bg-[#03102a] text-white py-[14px] lg:py-3.5 rounded-xl lg:rounded-lg font-semibold tracking-wide transition-all duration-200 hover:bg-[#0a1835] focus:ring-4 focus:ring-blue-900/20 shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <>
-                   <Loader2 className="w-5 h-5 animate-spin" /> Logging in...
-                </>
+                <Loader showBrand={false} label="Logging in..." size="sm" className="gap-2 py-0 text-white [&_p]:text-white/90" />
               ) : (
                 <>
                    Log In <ArrowRight className="w-5 h-5 ml-1 transition-transform lg:hidden group-hover:translate-x-1" />

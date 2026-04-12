@@ -32,6 +32,7 @@ const Router = () => {
           <Route path={ROUTES.SIGNUP} element={<Signup />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
           <Route path={ROUTES.OTP} element={<OTP />} />
+          <Route path={ROUTES.LOADING} element={<Loader fullScreen />} />
           <Route path={ROUTES.ERROR} element={<Error />} />
 
           {/* 🔒 Protected Routes with Layout */}

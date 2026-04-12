@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FormEvent } from 'react';
-import { User, Mail, Lock, EyeOff, Eye, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
+import { User, Mail, Lock, EyeOff, Eye, ArrowRight, ShieldCheck } from 'lucide-react';
 import FormInput from './FormInput';
 import { supabase } from '../../configs/supaClient';
 import TermsModal from './TermsModal';
+import Loader from '../../pages/Loader/Loader';
 
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -244,9 +245,7 @@ const SignupForm = () => {
               className="w-full bg-[#03102a] text-white py-[14px] lg:py-3.5 rounded-xl lg:rounded-lg font-semibold tracking-wide transition-all duration-200 hover:bg-[#0a1835] focus:ring-4 focus:ring-blue-900/20 shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Creating Account...
-                </>
+                <Loader showBrand={false} label="Creating account..." size="sm" className="gap-2 py-0 text-white [&_p]:text-white/90" />
               ) : (
                 <>
                   Create Account <ArrowRight className="w-4 h-4 lg:hidden ml-0.5 group-hover:translate-x-1 transition-transform" />

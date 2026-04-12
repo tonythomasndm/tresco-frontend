@@ -17,8 +17,7 @@ const TOTAL_DURATION_MS = 30000; // 30 seconds to reach 100%
 const MAX_WAIT_MS = 240000; // 2 minutes max before retry screen
 const POLL_INTERVAL_MS = 5000;
 const REQUEST_TIMEOUT_MS = 10000;
-const SCORE_API_URL =
-  "https://trescoml-production.up.railway.app/generate-score";
+const SCORE_API_URL = "/api/generate-score";
 
 const Processing = () => {
   const navigate = useNavigate();

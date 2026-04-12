@@ -91,19 +91,10 @@ export const MobileTopNav = () => {
 export const MobileAuthenticityWidget = () => {
   const apiData = getStoredData();
   const rawScore = Number(apiData?.score);
-  const normalizedScore =
-    Number.isFinite(rawScore) && rawScore <= 100 ? rawScore * 10 : rawScore;
-  const displayScore = Math.max(
-    0,
-    Math.min(
-      1000,
-      Math.round(Number.isFinite(normalizedScore) ? normalizedScore : 845),
-    ),
-  );
 
   const scoreData = [
-    { name: "Score", value: displayScore },
-    { name: "Remaining", value: Math.max(0, 1000 - displayScore) },
+    { name: "Score", value: rawScore },
+    { name: "Remaining", value: Math.max(0, 1000 - rawScore) },
   ];
   return (
     <div className="bg-[#1a365d] rounded-[2rem] p-8 shadow-xl flex flex-col items-center justify-center lg:hidden mt-2 relative overflow-hidden animate-fade-in-up border border-white/5">
@@ -138,7 +129,7 @@ export const MobileAuthenticityWidget = () => {
         {/* Centered Score */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <span className="mb-1 text-6xl font-black tracking-tight">
-            {displayScore}
+            {rawScore}
           </span>
           <span className="text-[10px] font-bold text-blue-200/50 uppercase tracking-widest">
             / 1000

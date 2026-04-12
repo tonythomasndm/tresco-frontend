@@ -12,19 +12,10 @@ const getStoredData = () => {
 export const AuthenticityWidget = () => {
   const apiData = getStoredData();
   const rawScore = Number(apiData?.score);
-  const normalizedScore =
-    Number.isFinite(rawScore) && rawScore <= 100 ? rawScore * 10 : rawScore;
-  const displayScore = Math.max(
-    0,
-    Math.min(
-      1000,
-      Math.round(Number.isFinite(normalizedScore) ? normalizedScore : 845),
-    ),
-  );
 
   const scoreData = [
-    { name: "Score", value: displayScore },
-    { name: "Remaining", value: Math.max(0, 1000 - displayScore) },
+    { name: "Score", value: rawScore },
+    { name: "Remaining", value: Math.max(0, 1000 - rawScore) },
   ];
 
   return (
@@ -64,7 +55,7 @@ export const AuthenticityWidget = () => {
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-5xl font-black leading-none tracking-tighter text-white lg:text-6xl">
-              {displayScore}
+              {rawScore}
             </span>
             <span className="text-[10px] font-bold text-blue-300/40 uppercase tracking-widest mt-1">
               / 1000
@@ -89,7 +80,6 @@ export const AuthenticityWidget = () => {
             This candidate demonstrates strong technical credibility across all
             connected platforms with verified contributions.
           </p>
-
         </div>
       </div>
     </div>

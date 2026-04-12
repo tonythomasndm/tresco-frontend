@@ -11,6 +11,7 @@ export interface ExtractedLinks {
   github: string;
   kaggle: string;
   leetcode: string;
+  hackerrank: string;
   stackoverflow: string;
   behance: string;
   personalWebsite: string;
@@ -22,6 +23,7 @@ const URL_PATTERNS: Record<string, RegExp> = {
   github: /(?:https?:\/\/)?(?:www\.)?github\.com\/[\w-]+\/?/gi,
   kaggle: /(?:https?:\/\/)?(?:www\.)?kaggle\.com\/[\w-]+\/?/gi,
   leetcode: /(?:https?:\/\/)?(?:www\.)?leetcode\.com\/(?:u\/)?[\w-]+\/?/gi,
+  hackerrank: /(?:https?:\/\/)?(?:www\.)?hackerrank\.com\/(?:profile\/)?[\w-]+\/?/gi,
   stackoverflow: /(?:https?:\/\/)?(?:www\.)?stackoverflow\.com\/users\/[\w-/]+\/?/gi,
   behance: /(?:https?:\/\/)?(?:www\.)?behance\.net\/[\w-]+\/?/gi,
 };
@@ -69,6 +71,7 @@ export async function parseResumeForLinks(file: File): Promise<ExtractedLinks> {
     github: '',
     kaggle: '',
     leetcode: '',
+    hackerrank: '',
     stackoverflow: '',
     behance: '',
     personalWebsite: '',

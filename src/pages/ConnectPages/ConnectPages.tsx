@@ -12,27 +12,29 @@ import {
   User as UserIcon,
   CheckCircle2,
   AlertCircle,
-} from "lucide-react";
-import {
-  parseResumeForLinks,
-  type ExtractedLinks,
-} from "../../utils/resumeParser";
+  Trophy,
+  Loader2
+} from 'lucide-react';
+import { parseResumeForLinks, type ExtractedLinks } from '../../utils/resumeParser';
+import { savePlatformAccounts } from '../../utils/platformAccounts';
 
 const ConnectPages = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isParsing, setIsParsing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [links, setLinks] = useState<ExtractedLinks>({
-    linkedin: "",
-    github: "",
-    kaggle: "",
-    leetcode: "",
-    stackoverflow: "",
-    behance: "",
-    personalWebsite: "",
-    other: [],
+    linkedin: '',
+    github: '',
+    kaggle: '',
+    leetcode: '',
+    hackerrank: '',
+    stackoverflow: '',
+    behance: '',
+    personalWebsite: '',
+    other: []
   });
 
   const [additionalRepos, setAdditionalRepos] = useState({
@@ -90,14 +92,52 @@ const ConnectPages = () => {
     }));
   };
 
-  const handleSave = () => {
-    // In a real app, send to backend. For now, save to localStorage.
-    localStorage.setItem("connected_pages", JSON.stringify(links));
-    navigate("/processing");
+  const handleSave = async () => {
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      // Get the logged-in user from localStorage
+      const storedUser = localStorage.getItem('user');
+      if (!storedUser) {
+        setError('You must be logged in to save. Please log in first.');
+        setIsSaving(false);
+        return;
+      }
+
+      const user = JSON.parse(storedUser);
+      const userId = user.id;
+
+      if (!userId) {
+        setError('Invalid user session. Please log in again.');
+        setIsSaving(false);
+        return;
+      }
+
+      // Save platform accounts to Supabase
+      const result = await savePlatformAccounts(userId, links as unknown as Record<string, string>);
+
+      if (!result.success) {
+        setError(`Failed to save: ${result.error}`);
+        setIsSaving(false);
+        return;
+      }
+
+      // Also keep a local copy for downstream processing page
+      localStorage.setItem('connected_pages', JSON.stringify(links));
+      navigate('/processing');
+    } catch (err) {
+      console.error('Error saving platform accounts:', err);
+      const errMsg = err instanceof Error ? err.message : String(err);
+      setError(`Something went wrong: ${errMsg}`);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
     <div className="flex flex-col min-h-screen font-sans bg-slate-50">
+      
       {/* Top Navbar */}
       {/* <nav className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 bg-white border-b border-slate-100">
         <div className="flex items-center gap-2">
@@ -112,7 +152,8 @@ const ConnectPages = () => {
       </nav> */}
 
       {/* Main Content */}
-      <main className="flex-1 w-full max-w-2xl px-4 py-8 mx-auto">
+      <main className="flex-1 w-full max-w-2xl px-4 py-8 pb-24 mx-auto">
+        
         <div className="mb-8">
           <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#0a152e] tracking-tight leading-tight mb-3">
             Connect your
@@ -159,123 +200,162 @@ const ConnectPages = () => {
           <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50">
-                  <LinkIcon className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-800">LinkedIn</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Import professional history and endorsements.
-                  </p>
-                </div>
+                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50">
+                    <LinkIcon className="w-5 h-5 text-blue-600" />
+                 </div>
+                 <div>
+                   <h3 className="font-bold text-slate-800">LinkedIn</h3>
+                   <p className="text-xs text-slate-500 mt-0.5">Import professional history and endorsements.</p>
+                 </div>
               </div>
               <span className="hidden sm:inline-flex bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
                 Recommended
               </span>
             </div>
             <div className="mt-4">
-              <input
-                type="url"
-                placeholder="linkedin.com/in/username"
-                value={links.linkedin}
-                onChange={(e) => handleChange("linkedin", e.target.value)}
-                className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
-              />
-              <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
-                {links.linkedin ? "Link Added" : "Add link"}
-              </button>
+               <input 
+                 type="url" 
+                 placeholder="linkedin.com/in/username"
+                 value={links.linkedin}
+                 onChange={(e) => handleChange('linkedin', e.target.value)}
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+               />
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                 {links.linkedin ? 'Link Added' : 'Add link'}
+               </button>
             </div>
           </div>
 
           {/* GitHub Card */}
           <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center justify-center w-10 h-10 border rounded-full bg-slate-50 border-slate-100">
-                <Code className="w-5 h-5 text-slate-700" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-800">GitHub</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Analyze repository contributions and code quality.
-                </p>
-              </div>
+               <div className="flex items-center justify-center w-10 h-10 border rounded-full bg-slate-50 border-slate-100">
+                  <Code className="w-5 h-5 text-slate-700" />
+               </div>
+               <div>
+                 <h3 className="font-bold text-slate-800">GitHub</h3>
+                 <p className="text-xs text-slate-500 mt-0.5">Analyze repository contributions and code quality.</p>
+               </div>
             </div>
             <div className="mt-4">
-              <input
-                type="url"
-                placeholder="github.com/username"
-                value={links.github}
-                onChange={(e) => handleChange("github", e.target.value)}
-                className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
-              />
-              <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
-                {links.github ? "Link Added" : "Add link"}
-              </button>
+               <input 
+                 type="url" 
+                 placeholder="github.com/username"
+                 value={links.github}
+                 onChange={(e) => handleChange('github', e.target.value)}
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+               />
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                 {links.github ? 'Link Added' : 'Add link'}
+               </button>
             </div>
           </div>
 
           {/* Kaggle Card */}
           <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-50">
-                <Database className="w-5 h-5 text-cyan-600" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-800">Kaggle</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Fetch data science rankings and competition results.
-                </p>
-              </div>
+               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-50">
+                  <Database className="w-5 h-5 text-cyan-600" />
+               </div>
+               <div>
+                 <h3 className="font-bold text-slate-800">Kaggle</h3>
+                 <p className="text-xs text-slate-500 mt-0.5">Fetch data science rankings and competition results.</p>
+               </div>
             </div>
             <div className="mt-4">
-              <input
-                type="url"
-                placeholder="kaggle.com/username"
-                value={links.kaggle}
-                onChange={(e) => handleChange("kaggle", e.target.value)}
-                className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
-              />
-              <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
-                {links.kaggle ? "Link Added" : "Add link"}
-              </button>
+               <input 
+                 type="url" 
+                 placeholder="kaggle.com/username"
+                 value={links.kaggle}
+                 onChange={(e) => handleChange('kaggle', e.target.value)}
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+               />
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                 {links.kaggle ? 'Link Added' : 'Add link'}
+               </button>
             </div>
           </div>
 
           {/* LeetCode Card */}
           <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-orange-50">
-                <Code2 className="w-5 h-5 text-orange-500" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-800">LeetCode</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Showcase coding algorithms and problem-solving skills.
-                </p>
-              </div>
+               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-orange-50">
+                  <Code2 className="w-5 h-5 text-orange-500" />
+               </div>
+               <div>
+                 <h3 className="font-bold text-slate-800">LeetCode</h3>
+                 <p className="text-xs text-slate-500 mt-0.5">Showcase coding algorithms and problem-solving skills.</p>
+               </div>
             </div>
             <div className="mt-4">
-              <input
-                type="url"
-                placeholder="leetcode.com/username"
-                value={links.leetcode}
-                onChange={(e) => handleChange("leetcode", e.target.value)}
-                className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
-              />
-              <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
-                {links.leetcode ? "Link Added" : "Add link"}
-              </button>
+               <input 
+                 type="url" 
+                 placeholder="leetcode.com/username"
+                 value={links.leetcode}
+                 onChange={(e) => handleChange('leetcode', e.target.value)}
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+               />
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                 {links.leetcode ? 'Link Added' : 'Add link'}
+               </button>
             </div>
           </div>
 
-          {/* Additional Repositories Toggle */}
-          <div className="p-5 mt-8 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
-            <div className="flex items-center gap-2 mb-5">
-              <Plus className="w-4 h-4 text-blue-600 bg-blue-50 rounded-full p-0.5" />
-              <h3 className="text-sm font-bold text-slate-800">
-                Additional Repositories
-              </h3>
+          {/* HackerRank Card */}
+          <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
+            <div className="flex items-center gap-3 mb-4">
+               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-50">
+                  <Trophy className="w-5 h-5 text-green-600" />
+               </div>
+               <div>
+                 <h3 className="font-bold text-slate-800">HackerRank</h3>
+                 <p className="text-xs text-slate-500 mt-0.5">Display coding challenges and certification badges.</p>
+               </div>
             </div>
+            <div className="mt-4">
+               <input 
+                 type="url" 
+                 placeholder="hackerrank.com/username"
+                 value={links.hackerrank}
+                 onChange={(e) => handleChange('hackerrank', e.target.value)}
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+               />
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                 {links.hackerrank ? 'Link Added' : 'Add link'}
+               </button>
+            </div>
+          </div>
+
+          <div className="p-5 mt-8 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
+             <div className="flex items-center gap-2 mb-5">
+               <Plus className="w-4 h-4 text-blue-600 bg-blue-50 rounded-full p-0.5" />
+               <h3 className="text-sm font-bold text-slate-800">Additional Repositories</h3>
+             </div>
+             
+             <div className="flex flex-wrap gap-3">
+               <button 
+                 onClick={() => setAdditionalRepos(p => ({...p, stackoverflow: !p.stackoverflow}))}
+                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
+                   additionalRepos.stackoverflow 
+                   ? 'bg-blue-50 border-blue-200 text-blue-700' 
+                   : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                 }`}
+               >
+                 <Database className="w-4 h-4" /> Stack Overflow
+                 {additionalRepos.stackoverflow && <CheckCircle2 className="w-3.5 h-3.5 ml-1" />}
+               </button>
+               
+               <button 
+                 onClick={() => setAdditionalRepos(p => ({...p, behance: !p.behance}))}
+                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
+                   additionalRepos.behance 
+                   ? 'bg-blue-50 border-blue-200 text-blue-700' 
+                   : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                 }`}
+               >
+                 <Search className="w-4 h-4" /> Behance
+                 {additionalRepos.behance && <CheckCircle2 className="w-3.5 h-3.5 ml-1" />}
+               </button>
 
             <div className="flex flex-wrap gap-3">
               <button
@@ -313,108 +393,99 @@ const ConnectPages = () => {
                 )}
               </button>
 
-              <button
-                onClick={() =>
-                  setAdditionalRepos((p) => ({
-                    ...p,
-                    personalWebsite: !p.personalWebsite,
-                  }))
-                }
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
-                  additionalRepos.personalWebsite
-                    ? "bg-blue-50 border-blue-200 text-blue-700"
-                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-                }`}
-              >
-                <UserIcon className="w-4 h-4" /> Personal Website
-                {additionalRepos.personalWebsite && (
-                  <CheckCircle2 className="w-3.5 h-3.5 ml-1" />
-                )}
-              </button>
-
-              <button
-                onClick={() =>
-                  setAdditionalRepos((p) => ({ ...p, otherUrl: !p.otherUrl }))
-                }
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
-                  additionalRepos.otherUrl
-                    ? "bg-blue-50 border-blue-200 text-blue-700"
-                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-                }`}
-              >
-                <Plus className="w-4 h-4" /> Other URL
-                {additionalRepos.otherUrl && (
-                  <CheckCircle2 className="w-3.5 h-3.5 ml-1" />
-                )}
-              </button>
-            </div>
-
-            {/* Expanded Inputs based on toggles */}
-            <div className="mt-5 space-y-3">
-              {additionalRepos.stackoverflow && (
-                <input
-                  type="url"
-                  placeholder="stackoverflow.com/users/..."
-                  value={links.stackoverflow}
-                  onChange={(e) =>
-                    handleChange("stackoverflow", e.target.value)
-                  }
-                  className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                />
-              )}
-              {additionalRepos.behance && (
-                <input
-                  type="url"
-                  placeholder="behance.net/..."
-                  value={links.behance}
-                  onChange={(e) => handleChange("behance", e.target.value)}
-                  className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                />
-              )}
-              {additionalRepos.personalWebsite && (
-                <input
-                  type="url"
-                  placeholder="https://yourwebsite.com"
-                  value={links.personalWebsite}
-                  onChange={(e) =>
-                    handleChange("personalWebsite", e.target.value)
-                  }
-                  className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                />
-              )}
-              {additionalRepos.otherUrl && (
-                <input
-                  type="url"
-                  placeholder="https://other-portfolio.com"
-                  value={links.other[0] || ""}
-                  onChange={(e) => {
-                    const newOther = [...links.other];
-                    newOther[0] = e.target.value;
-                    setLinks((p) => ({ ...p, other: newOther }));
-                  }}
-                  className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                />
-              )}
-            </div>
+             <div className="mt-5 space-y-3">
+               {additionalRepos.stackoverflow && (
+                 <input 
+                   type="url" 
+                   placeholder="stackoverflow.com/users/..."
+                   value={links.stackoverflow}
+                   onChange={(e) => handleChange('stackoverflow', e.target.value)}
+                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                 />
+               )}
+               {additionalRepos.behance && (
+                 <input 
+                   type="url" 
+                   placeholder="behance.net/..."
+                   value={links.behance}
+                   onChange={(e) => handleChange('behance', e.target.value)}
+                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                 />
+               )}
+               {additionalRepos.personalWebsite && (
+                 <input 
+                   type="url" 
+                   placeholder="https://yourwebsite.com"
+                   value={links.personalWebsite}
+                   onChange={(e) => handleChange('personalWebsite', e.target.value)}
+                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                 />
+               )}
+               {additionalRepos.otherUrl && (
+                 <input 
+                   type="url" 
+                   placeholder="https://other-portfolio.com"
+                   value={links.other[0] || ''}
+                   onChange={(e) => {
+                     const newOther = [...links.other];
+                     newOther[0] = e.target.value;
+                     setLinks(p => ({ ...p, other: newOther }));
+                   }}
+                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                 />
+               )}
+             </div>
           </div>
-
-          {/* Action Buttons */}
+          
           <div className="flex justify-end gap-4 pt-6 pb-20">
-            <button
-              onClick={() => navigate("/processing")}
-              className="px-6 py-3 font-medium transition-colors bg-white border rounded-xl text-slate-600 border-slate-200 hover:bg-slate-50"
-            >
-              Skip
-            </button>
-            <button
-              onClick={handleSave}
-              className="px-6 py-3 font-medium text-white transition-colors bg-blue-600 shadow-sm rounded-xl hover:bg-blue-700"
-            >
-              Save Changes
-            </button>
+             <button
+               onClick={() => navigate('/processing')}
+               className="px-6 py-3 font-medium transition-colors bg-white border rounded-xl text-slate-600 border-slate-200 hover:bg-slate-50"
+             >
+               Skip
+             </button>
+             <button
+               onClick={handleSave}
+               disabled={isSaving}
+               className="px-6 py-3 font-medium text-white transition-colors bg-blue-600 shadow-sm rounded-xl hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+             >
+               {isSaving ? (
+                 <>
+                   <Loader2 className="w-4 h-4 animate-spin" />
+                   Saving...
+                 </>
+               ) : (
+                 'Save Changes'
+               )}
+             </button>
           </div>
         </div>
       </main>
+
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-6 py-3 flex justify-between sm:justify-center sm:gap-16 items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)] z-20">
+         <button className="flex flex-col items-center gap-1 transition-colors text-slate-400 hover:text-blue-600">
+            <Database className="w-5 h-5" />
+            <span className="text-[9px] font-bold uppercase tracking-wider">Store</span>
+         </button>
+         <button className="flex flex-col items-center gap-1 transition-colors text-slate-400 hover:text-blue-600">
+            <Search className="w-5 h-5" />
+            <span className="text-[9px] font-bold uppercase tracking-wider">Analysis</span>
+         </button>
+         <button className="flex flex-col items-center gap-1 transition-colors text-slate-400 hover:text-blue-600">
+            <UserIcon className="w-5 h-5" />
+            <span className="text-[9px] font-bold uppercase tracking-wider">Candidates</span>
+         </button>
+         <button className="flex flex-col items-center gap-1 text-blue-600 bg-blue-50 px-4 py-1.5 rounded-lg transition-colors">
+            <div className="flex items-center justify-center w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" className="w-5 h-5 text-blue-600">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              </svg>
+            </div>
+            <span className="text-[9px] font-bold uppercase tracking-wider">Connect</span>
+         </button>
+      </div>
+
     </div>
   );
 };

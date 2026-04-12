@@ -105,6 +105,13 @@ const Processing = () => {
       setStatusIndex((prev) => (prev + 1) % 5);
     }, 4000);
 
+    // Max timeout — if not complete after 60s, show retry
+    timeoutRef.current = setTimeout(() => {
+      if (!isComplete) {
+        setHasTimedOut(true);
+      }
+    }, MAX_TIMEOUT_MS);
+
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       clearInterval(statusInterval);

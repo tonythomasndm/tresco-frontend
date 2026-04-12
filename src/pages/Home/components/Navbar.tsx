@@ -31,6 +31,12 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     window.location.href = "/login";
@@ -73,7 +79,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Auth */}
-          <div className="items-center hidden space-x-5 md:flex">
+          <div className="hidden md:flex items-center space-x-5">
             {isLoggedIn ? (
               <>
                 <Link
@@ -128,7 +134,6 @@ const Navbar = () => {
                 </Link>
               </>
             )}
-          </div>
 
           {/* Mobile Menu Button */}
           <button

@@ -24,7 +24,7 @@ const Error = lazy(() => import("../pages/Error/Error"));
 const Router = () => {
   return (
     <BrowserRouter>
-      <Suspense fallback={<Loader />}>
+      <Suspense fallback={<Loader fullScreen />}>
         <Routes>
           {/* 🌐 Public Routes */}
           <Route path={ROUTES.HOME} element={<Home />} />

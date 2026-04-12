@@ -25,53 +25,93 @@ const Processing = () => {
   const startTimeRef = useRef<number>(Date.now());
   const animFrameRef = useRef<number | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const statusMessages = [
     { icon: <Search className="w-5 h-5" />, text: "Analyzing digital footprint..." },
     { icon: <Database className="w-5 h-5" />, text: "Aggregating platform data..." },
     { icon: <Fingerprint className="w-5 h-5" />, text: "Verifying authentic identity..." },
-    { icon: <Cpu className="w-5 h-5" />, text: "ML Model computing TrustScore..." },
+    { icon: <Cpu className="w-5 h-5" />, text: "ML Model computing Tresco..." },
     { icon: <Shield className="w-5 h-5" />, text: "Finalizing security audit..." }
   ];
 
   const updateProgress = useCallback(() => {
+    if (isComplete || hasTimedOut) return;
+
     const elapsed = Date.now() - startTimeRef.current;
-    const newProgress = Math.min((elapsed / TOTAL_DURATION_MS) * 100, 100);
+    const newProgress = Math.min((elapsed / TOTAL_DURATION_MS) * 99, 99);
     
     setProgress(newProgress);
 
-    if (newProgress >= 100) {
-      setIsComplete(true);
-      return; // Stop animation
+    animFrameRef.current = requestAnimationFrame(updateProgress);
+  }, [isComplete, hasTimedOut]);
+
+  const runApiCall = useCallback(() => {
+    const storedUser = localStorage.getItem('user');
+    let userId = '';
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        userId = user.id;
+      } catch (e) {}
     }
 
-    animFrameRef.current = requestAnimationFrame(updateProgress);
+    if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+    }
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    
+    timeoutRef.current = setTimeout(() => {
+      setHasTimedOut(true);
+      abortController.abort();
+    }, MAX_TIMEOUT_MS);
+
+    if (userId) {
+      fetch(`https://ml-model-deployment-simulation-production.up.railway.app/generate-score?user_id=${userId}`, {
+        method: 'POST',
+        signal: abortController.signal
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          // Save to local storage for Dashboard to pick up
+          localStorage.setItem('trustscore_data', JSON.stringify(data.data));
+          setIsComplete(true);
+          setProgress(100);
+          if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        } else {
+          setHasTimedOut(true);
+        }
+      })
+      .catch(err => {
+        if (err.name !== 'AbortError') {
+           setHasTimedOut(true);
+        }
+      });
+    } else {
+      setTimeout(() => { setHasTimedOut(true); }, 2000);
+    }
   }, []);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
-
-    // Start progress animation
     animFrameRef.current = requestAnimationFrame(updateProgress);
+    runApiCall();
 
-    // Status message rotation
     const statusInterval = setInterval(() => {
       setStatusIndex((prev) => (prev + 1) % 5);
     }, 4000);
-
-    // Max timeout — if not complete after 60s, show retry
-    timeoutRef.current = setTimeout(() => {
-      if (!isComplete) {
-        setHasTimedOut(true);
-      }
-    }, MAX_TIMEOUT_MS);
 
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       clearInterval(statusInterval);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
     };
-  }, [updateProgress, isComplete]);
+  }, [updateProgress, runApiCall]);
 
   const handleRetry = () => {
     setProgress(0);
@@ -79,13 +119,9 @@ const Processing = () => {
     setHasTimedOut(false);
     setStatusIndex(0);
     startTimeRef.current = Date.now();
-    animFrameRef.current = requestAnimationFrame(updateProgress);
     
-    // Reset max timeout
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      setHasTimedOut(true);
-    }, MAX_TIMEOUT_MS);
+    runApiCall();
+    animFrameRef.current = requestAnimationFrame(updateProgress);
   };
 
   const handleGoToDashboard = () => {
@@ -226,7 +262,7 @@ const Processing = () => {
            <div className="w-4 h-4 bg-white/10 rounded flex items-center justify-center">
              <Shield className="w-2 h-2 text-white" />
            </div>
-           <span className="font-bold text-[10px] text-white tracking-widest uppercase">TrustScore Engine v1.0</span>
+           <span className="font-bold text-[10px] text-white tracking-widest uppercase">Tresco Engine v1.0</span>
         </div>
       </div>
     </div>

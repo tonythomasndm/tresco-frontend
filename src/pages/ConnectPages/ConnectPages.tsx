@@ -18,11 +18,14 @@ import {
   parseResumeForLinks,
   type ExtractedLinks,
 } from "../../utils/resumeParser";
+import { savePlatformAccounts } from "../../utils/platformAccounts";
+import { supabase } from '../../configs/supaClient';
 
 const ConnectPages = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isParsing, setIsParsing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [links, setLinks] = useState<ExtractedLinks>({
@@ -89,21 +92,76 @@ const ConnectPages = () => {
     }));
   };
 
-  const handleSave = () => {
-    // In a real app, send to backend. For now, save to localStorage.
-    localStorage.setItem("connected_pages", JSON.stringify(links));
-    navigate("/processing");
+  const handleSave = async () => {
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      // Get the logged-in user from localStorage
+      const storedUser = localStorage.getItem('user');
+      if (!storedUser) {
+        setError('You must be logged in to save. Please log in first.');
+        setIsSaving(false);
+        return;
+      }
+
+      const user = JSON.parse(storedUser);
+      let userId = user.id;
+
+      // Auto-heal legacy sessions without ID
+      if (!userId && user.email) {
+        const { data, error: fetchError } = await supabase
+          .from('users')
+          .select('id')
+          .eq('email', user.email)
+          .single();
+          
+        if (data && data.id) {
+          userId = data.id;
+          user.id = userId;
+          localStorage.setItem('user', JSON.stringify(user)); // Update session in place
+        } else {
+          console.error("Auto-heal failed:", fetchError);
+        }
+      }
+
+      if (!userId) {
+        setError('Invalid user session. Please log in again.');
+        setIsSaving(false);
+        return;
+      }
+
+      // Save platform accounts to Supabase
+      const result = await savePlatformAccounts(userId, links as unknown as Record<string, string>);
+
+      if (!result.success) {
+        setError(`Failed to save: ${result.error}`);
+        setIsSaving(false);
+        return;
+      }
+
+      // Also keep a local copy for downstream processing page
+      localStorage.setItem('connected_pages', JSON.stringify(links));
+      navigate('/processing');
+    } catch (err) {
+      console.error('Error saving platform accounts:', err);
+      const errMsg = err instanceof Error ? err.message : String(err);
+      setError(`Something went wrong: ${errMsg}`);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
     <div className="flex flex-col min-h-screen font-sans bg-slate-50">
+      
       {/* Top Navbar */}
       {/* <nav className="sticky top-0 z-10 flex items-center justify-between px-4 py-4 bg-white border-b border-slate-100">
         <div className="flex items-center gap-2">
            <div className="w-8 h-8 bg-[#0a152e] rounded flex items-center justify-center">
              <UserIcon className="w-5 h-5 text-blue-400" />
            </div>
-           <span className="text-lg font-bold tracking-tight text-blue-600">TrustScore</span>
+           <span className="text-lg font-bold tracking-tight text-blue-600">Tresco</span>
         </div>
         <button className="text-slate-500 hover:text-slate-800">
            <Search className="w-5 h-5" />
@@ -111,7 +169,8 @@ const ConnectPages = () => {
       </nav> */}
 
       {/* Main Content */}
-      <main className="flex-1 w-full max-w-2xl px-4 py-8 mx-auto">
+      <main className="flex-1 w-full max-w-2xl px-4 py-8 pb-24 mx-auto">
+        
         <div className="mb-8">
           <h1 className="text-2xl sm:text-[28px] font-extrabold text-[#0a152e] tracking-tight leading-tight mb-3">
             Connect your
@@ -120,7 +179,7 @@ const ConnectPages = () => {
           <p className="text-sm leading-relaxed text-slate-500 sm:text-base">
             Synchronize your digital footprint to generate a high-fidelity
             recruitment profile. We aggregate data from these sources to build
-            your TrustScore.
+            your Tresco.
           </p>
         </div>
 
@@ -158,58 +217,54 @@ const ConnectPages = () => {
           <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50">
-                  <LinkIcon className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-slate-800">LinkedIn</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Import professional history and endorsements.
-                  </p>
-                </div>
+                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50">
+                    <LinkIcon className="w-5 h-5 text-blue-600" />
+                 </div>
+                 <div>
+                   <h3 className="font-bold text-slate-800">LinkedIn</h3>
+                   <p className="text-xs text-slate-500 mt-0.5">Import professional history and endorsements.</p>
+                 </div>
               </div>
               <span className="hidden sm:inline-flex bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
                 Recommended
               </span>
             </div>
             <div className="mt-4">
-              <input
-                type="url"
-                placeholder="linkedin.com/in/username"
-                value={links.linkedin}
-                onChange={(e) => handleChange("linkedin", e.target.value)}
-                className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
-              />
-              <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
-                {links.linkedin ? "Link Added" : "Add link"}
-              </button>
+               <input 
+                 type="url" 
+                 placeholder="linkedin.com/in/username"
+                 value={links.linkedin}
+                 onChange={(e) => handleChange('linkedin', e.target.value)}
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+               />
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                 {links.linkedin ? 'Link Added' : 'Add link'}
+               </button>
             </div>
           </div>
 
           {/* GitHub Card */}
           <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center justify-center w-10 h-10 border rounded-full bg-slate-50 border-slate-100">
-                <Code className="w-5 h-5 text-slate-700" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-800">GitHub</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Analyze repository contributions and code quality.
-                </p>
-              </div>
+               <div className="flex items-center justify-center w-10 h-10 border rounded-full bg-slate-50 border-slate-100">
+                  <Code className="w-5 h-5 text-slate-700" />
+               </div>
+               <div>
+                 <h3 className="font-bold text-slate-800">GitHub</h3>
+                 <p className="text-xs text-slate-500 mt-0.5">Analyze repository contributions and code quality.</p>
+               </div>
             </div>
             <div className="mt-4">
-              <input
-                type="url"
-                placeholder="github.com/username"
-                value={links.github}
-                onChange={(e) => handleChange("github", e.target.value)}
-                className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
-              />
-              <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
-                {links.github ? "Link Added" : "Add link"}
-              </button>
+               <input 
+                 type="url" 
+                 placeholder="github.com/username"
+                 value={links.github}
+                 onChange={(e) => handleChange('github', e.target.value)}
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+               />
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                 {links.github ? 'Link Added' : 'Add link'}
+               </button>
             </div>
           </div>
 
@@ -270,39 +325,34 @@ const ConnectPages = () => {
           {/* LeetCode Card */}
           <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-orange-50">
-                <Code2 className="w-5 h-5 text-orange-500" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-800">LeetCode</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Showcase coding algorithms and problem-solving skills.
-                </p>
-              </div>
+               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-orange-50">
+                  <Code2 className="w-5 h-5 text-orange-500" />
+               </div>
+               <div>
+                 <h3 className="font-bold text-slate-800">LeetCode</h3>
+                 <p className="text-xs text-slate-500 mt-0.5">Showcase coding algorithms and problem-solving skills.</p>
+               </div>
             </div>
             <div className="mt-4">
-              <input
-                type="url"
-                placeholder="leetcode.com/username"
-                value={links.leetcode}
-                onChange={(e) => handleChange("leetcode", e.target.value)}
-                className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
-              />
-              <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
-                {links.leetcode ? "Link Added" : "Add link"}
-              </button>
+               <input 
+                 type="url" 
+                 placeholder="leetcode.com/username"
+                 value={links.leetcode}
+                 onChange={(e) => handleChange('leetcode', e.target.value)}
+                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+               />
+               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                 {links.leetcode ? 'Link Added' : 'Add link'}
+               </button>
             </div>
           </div>
 
-          {/* Additional Repositories Toggle */}
           <div className="p-5 mt-8 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
-            <div className="flex items-center gap-2 mb-5">
-              <Plus className="w-4 h-4 text-blue-600 bg-blue-50 rounded-full p-0.5" />
-              <h3 className="text-sm font-bold text-slate-800">
-                Additional Repositories
-              </h3>
-            </div>
-
+             <div className="flex items-center gap-2 mb-5">
+               <Plus className="w-4 h-4 text-blue-600 bg-blue-50 rounded-full p-0.5" />
+               <h3 className="text-sm font-bold text-slate-800">Additional Repositories</h3>
+             </div>
+             
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() =>
@@ -393,8 +443,7 @@ const ConnectPages = () => {
               )}
             </div>
           </div>
-
-          {/* Action Buttons */}
+          
           <div className="flex justify-end gap-4 pt-6 pb-20">
             <button
               onClick={() => navigate(-1)}
@@ -404,13 +453,17 @@ const ConnectPages = () => {
             </button>
             <button
               onClick={handleSave}
-              className="px-6 py-3 font-medium text-white transition-colors bg-blue-600 shadow-sm rounded-xl hover:bg-blue-700"
+              disabled={isSaving}
+              className="px-6 py-3 font-medium text-white transition-colors bg-blue-600 shadow-sm rounded-xl hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Save Changes
+              {isSaving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </div>
       </main>
+
+
+
     </div>
   );
 };

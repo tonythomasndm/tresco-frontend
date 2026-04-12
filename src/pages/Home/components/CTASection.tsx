@@ -28,8 +28,8 @@ const CTASection = () => {
             <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-white mb-6 leading-tight">
               Ready to hire with<br />precision?
             </h2>
-            <p className="text-blue-200/60 text-lg font-medium mb-12 max-w-2xl mx-auto leading-relaxed">
-              Join 500+ forward-thinking teams using TrustScore to build high-performance cultures.
+            <p className="text-[#a1bcdc] text-lg font-medium mb-10 max-w-2xl mx-auto">
+              Join 500+ forward-thinking teams using Tresco to build high-performance cultures.
             </p>
             <Link 
               to={isLoggedIn ? "/connect" : "/login"} 

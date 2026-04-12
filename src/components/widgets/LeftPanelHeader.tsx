@@ -7,7 +7,7 @@ const LeftPanelHeader = () => {
         <Activity className="w-7 h-7" strokeWidth={3} />
       </div>
       <div className="mt-2 lg:mt-0">
-        <h1 className="text-2xl lg:text-xl font-bold tracking-tight">TrustScore</h1>
+        <h1 className="text-2xl lg:text-xl font-bold tracking-tight">Tresco</h1>
         <p className="text-[11px] lg:text-[10px] tracking-[0.2em] text-blue-200/80 uppercase font-bold lg:hidden mt-1">Candidate Intelligence Platform</p>
       </div>
     </div>

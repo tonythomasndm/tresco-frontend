@@ -1,13 +1,5 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
-const platforms = [
-  { name: 'LeetCode',      score: 92, color: '#eab308', bg: 'bg-yellow-50', border: 'border-yellow-100' },
-  { name: 'GitHub',         score: 88, color: '#8b5cf6', bg: 'bg-violet-50', border: 'border-violet-100' },
-  { name: 'LinkedIn',       score: 74, color: '#3b82f6', bg: 'bg-blue-50',   border: 'border-blue-100' },
-  { name: 'StackOverflow',  score: 65, color: '#f97316', bg: 'bg-orange-50', border: 'border-orange-100' },
-  { name: 'HackerRank',     score: 78, color: '#10b981', bg: 'bg-emerald-50', border: 'border-emerald-100' },
-];
-
 const PlatformCard = ({ name, score, color, bg, border }: { name: string; score: number; color: string; bg: string; border: string }) => {
   const data = [{ value: score }, { value: 100 - score }];
 
@@ -55,6 +47,28 @@ const PlatformCard = ({ name, score, color, bg, border }: { name: string; score:
 };
 
 export const PlatformWeightageWidget = () => {
+  const getStoredData = () => {
+    try {
+      const data = localStorage.getItem('trustscore_data');
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const apiData = getStoredData();
+  const getScore = (key: string, defaultScore: number) => {
+     return apiData?.platform_scores?.[key] ?? defaultScore;
+  };
+
+  const platforms = [
+    { name: 'LeetCode',      score: getScore('leetcode', 92), color: '#eab308', bg: 'bg-yellow-50', border: 'border-yellow-100' },
+    { name: 'GitHub',        score: getScore('github', 88),   color: '#8b5cf6', bg: 'bg-violet-50', border: 'border-violet-100' },
+    { name: 'LinkedIn',      score: getScore('linkedin', 74), color: '#3b82f6', bg: 'bg-blue-50',   border: 'border-blue-100' },
+    { name: 'StackOverflow', score: getScore('stack_overflow', 65), color: '#f97316', bg: 'bg-orange-50', border: 'border-orange-100' },
+    { name: 'HackerRank',    score: getScore('hackerrank', 78), color: '#10b981', bg: 'bg-emerald-50', border: 'border-emerald-100' },
+  ];
+
   return (
     <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60">
       <div className="flex items-center justify-between mb-6">

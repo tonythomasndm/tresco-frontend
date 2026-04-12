@@ -9,8 +9,9 @@ import Footer from "./components/Footer";
 
 const Home = () => {
   return (
-    <div className="w-full min-h-screen bg-white font-sans selection:bg-blue-200 antialiased overflow-x-hidden scroll-smooth">
-      <Navbar />
+    <div className="w-full min-h-screen bg-[#f8fafc] font-sans selection:bg-blue-200 antialiased overflow-x-hidden">
+     <Navbar />
+      
       <HeroSection />
       <PartnerLogos />
       <HowItWorks />

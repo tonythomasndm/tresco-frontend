@@ -1,17 +1,35 @@
 import { CheckCircle2, AlertTriangle, Lightbulb, TrendingUp, ArrowRight } from 'lucide-react';
 
+const getStoredData = () => {
+  try {
+    const data = localStorage.getItem('trustscore_data');
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
+};
+
+const splitSentences = (text: string) => {
+  if (!text) return [];
+  return text.split(/(?<=[.?!])\s+/).filter(s => s.trim().length > 0);
+};
+
 export const InsightListsWidget = () => {
-  const pros = [
+  const apiData = getStoredData();
+
+  const defaultPros = [
     "Zero-Friction Transition from theory to implementation",
     "Exceptional Algorithmic Density scores across platforms",
     "Verified proficiency in Distributed Systems design"
   ];
+  const pros = apiData?.pros ? splitSentences(apiData.pros) : defaultPros;
 
-  const cons = [
+  const defaultCons = [
     "Low Network Resonance — LinkedIn profile is sparse",
     "Minimal Peer Endorsements relative to technical skill",
     "Limited public Mentorship or community leadership indicators"
   ];
+  const cons = apiData?.cons ? splitSentences(apiData.cons) : defaultCons;
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
@@ -65,7 +83,9 @@ export const InsightListsWidget = () => {
 };
 
 export const ImprovementsWidget = () => {
-  const improvements = [
+  const apiData = getStoredData();
+
+  const defaultImprovements = [
     {
       title: "Strengthen LinkedIn Presence",
       description: "Add detailed project descriptions, gather 5+ skill endorsements, and publish technical articles.",
@@ -96,6 +116,25 @@ export const ImprovementsWidget = () => {
     }
   ];
 
+  let improvementsList = defaultImprovements;
+  if (apiData?.improvements) {
+    const sentences = splitSentences(apiData.improvements);
+    improvementsList = sentences.map((sent, i) => {
+      const styles = [
+        { impact: "High", color: "from-emerald-500 to-teal-600", badgeBg: "bg-emerald-100 text-emerald-700" },
+        { impact: "Medium", color: "from-blue-500 to-indigo-600", badgeBg: "bg-blue-100 text-blue-700" },
+        { impact: "Medium", color: "from-violet-500 to-purple-600", badgeBg: "bg-violet-100 text-violet-700" },
+        { impact: "Moderate", color: "from-amber-500 to-orange-600", badgeBg: "bg-amber-100 text-amber-700" }
+      ];
+      const style = styles[i % styles.length];
+      return {
+        title: `Priority Optimization ${i + 1}`,
+        description: sent,
+        ...style
+      };
+    });
+  }
+
   return (
     <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between mb-6">
@@ -111,7 +150,7 @@ export const ImprovementsWidget = () => {
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        {improvements.map((item, index) => (
+        {improvementsList.map((item, index) => (
           <div 
             key={index}
             className="bg-[#fafbfc] rounded-2xl p-5 border border-slate-100 hover:border-slate-200 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-default"

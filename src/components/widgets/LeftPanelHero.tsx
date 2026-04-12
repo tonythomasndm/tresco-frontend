@@ -5,7 +5,7 @@ const LeftPanelHero = () => {
         Build your <span className="text-[#8cb8ff]">trusted</span> candidate profile.
       </h2>
       <p className="text-blue-100/70 text-base xl:text-lg leading-relaxed">
-        Join thousands of professionals using TrustScore to verify credentials, showcase achievements, and stand out to top employers.
+        Join thousands of professionals using Tresco to verify credentials, showcase achievements, and stand out to top employers.
       </p>
     </div>
   );

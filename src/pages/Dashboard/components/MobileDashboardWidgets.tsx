@@ -1,6 +1,20 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { AlertTriangle, Activity, Settings, FileText, CheckCircle2, Lightbulb, TrendingUp, Download } from 'lucide-react';
 
+const getStoredData = () => {
+  try {
+    const data = localStorage.getItem('trustscore_data');
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
+};
+
+const splitSentences = (text: string) => {
+  if (!text) return [];
+  return text.split(/(?<=[.?!])\s+/).filter(s => s.trim().length > 0);
+};
+
 export const MobileTopNav = () => {
   const handleDownloadPDF = () => {
     window.print();
@@ -26,9 +40,13 @@ export const MobileTopNav = () => {
 };
 
 export const MobileAuthenticityWidget = () => {
+  const apiData = getStoredData();
+  const rawScore = apiData?.score ? apiData.score : 84.5;
+  const displayScore = Math.round(rawScore * 10); // scale up to 1000
+
   const scoreData = [
-    { name: 'Score', value: 845 },
-    { name: 'Remaining', value: 155 }
+    { name: 'Score', value: displayScore },
+    { name: 'Remaining', value: 1000 - displayScore }
   ];
   return (
     <div className="bg-[#1a365d] rounded-[2rem] p-8 shadow-xl flex flex-col items-center justify-center lg:hidden mt-2 relative overflow-hidden animate-fade-in-up border border-white/5">
@@ -60,7 +78,7 @@ export const MobileAuthenticityWidget = () => {
         </ResponsiveContainer>
         {/* Centered Score */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-           <span className="text-6xl font-black tracking-tight mb-1">845</span>
+           <span className="text-6xl font-black tracking-tight mb-1">{displayScore}</span>
            <span className="text-[10px] font-bold text-blue-200/50 uppercase tracking-widest">/ 1000</span>
         </div>
       </div>
@@ -96,21 +114,41 @@ const MobileDonut = ({ score, name }: { score: number, name: string }) => {
 };
 
 export const MobileSourceHealthWidget = () => {
+  const apiData = getStoredData();
+  const getScore = (key: string, defaultScore: number) => {
+     return apiData?.platform_scores?.[key] ?? defaultScore;
+  };
+
   return (
     <div className="lg:hidden mt-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
       <h3 className="text-[9px] text-slate-400 font-black tracking-[0.2em] uppercase mb-4 px-1">Platform Weightage</h3>
       <div className="grid grid-cols-5 gap-2">
-         <MobileDonut score={92} name="LC" />
-         <MobileDonut score={88} name="GH" />
-         <MobileDonut score={74} name="LI" />
-         <MobileDonut score={65} name="SO" />
-         <MobileDonut score={78} name="HR" />
+         <MobileDonut score={getScore('leetcode', 92)} name="LC" />
+         <MobileDonut score={getScore('github', 88)} name="GH" />
+         <MobileDonut score={getScore('linkedin', 74)} name="LI" />
+         <MobileDonut score={getScore('stack_overflow', 65)} name="SO" />
+         <MobileDonut score={getScore('hackerrank', 78)} name="HR" />
       </div>
     </div>
   );
 };
 
 export const MobileProsConsWidget = () => {
+  const apiData = getStoredData();
+  const defaultPros = [
+    "Zero-Friction Transition from theory to implementation",
+    "Exceptional Algorithmic Density scores",
+    "Verified proficiency in Distributed Systems"
+  ];
+  const pros = apiData?.pros ? splitSentences(apiData.pros) : defaultPros;
+
+  const defaultCons = [
+    "Low Network Resonance (LinkedIn profile sparse)",
+    "Minimal Peer Endorsements relative to technical skill",
+    "Limited public Mentorship indicators"
+  ];
+  const cons = apiData?.cons ? splitSentences(apiData.cons) : defaultCons;
+
   return (
     <div className="lg:hidden mt-8 space-y-5 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
       {/* Pros */}
@@ -122,18 +160,12 @@ export const MobileProsConsWidget = () => {
           <h3 className="text-[11px] text-[#1a365d] font-black tracking-[0.15em] uppercase">Pros</h3>
         </div>
         <ul className="space-y-3">
-          <li className="flex items-start gap-3">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
-            <p className="text-[12px] text-slate-600 leading-snug font-bold">Zero-Friction Transition from theory to implementation</p>
-          </li>
-          <li className="flex items-start gap-3">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
-            <p className="text-[12px] text-slate-600 leading-snug font-bold">Exceptional Algorithmic Density scores</p>
-          </li>
-          <li className="flex items-start gap-3">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
-            <p className="text-[12px] text-slate-600 leading-snug font-bold">Verified proficiency in Distributed Systems</p>
-          </li>
+          {pros.map((pro: string, i: number) => (
+            <li key={i} className="flex items-start gap-3">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
+              <p className="text-[12px] text-slate-600 leading-snug font-bold">{pro}</p>
+            </li>
+          ))}
         </ul>
       </div>
 
@@ -146,18 +178,12 @@ export const MobileProsConsWidget = () => {
           <h3 className="text-[11px] text-[#1a365d] font-black tracking-[0.15em] uppercase">Cons</h3>
         </div>
         <ul className="space-y-3">
-          <li className="flex items-start gap-3">
-            <div className="w-2 h-2 rounded-full bg-orange-400 mt-1.5 shrink-0" />
-            <p className="text-[12px] text-slate-600 leading-snug font-bold">Low Network Resonance (LinkedIn profile sparse)</p>
-          </li>
-          <li className="flex items-start gap-3">
-            <div className="w-2 h-2 rounded-full bg-orange-400 mt-1.5 shrink-0" />
-            <p className="text-[12px] text-slate-600 leading-snug font-bold">Minimal Peer Endorsements relative to technical skill</p>
-          </li>
-          <li className="flex items-start gap-3">
-            <div className="w-2 h-2 rounded-full bg-orange-400 mt-1.5 shrink-0" />
-            <p className="text-[12px] text-slate-600 leading-snug font-bold">Limited public Mentorship indicators</p>
-          </li>
+          {cons.map((con: string, i: number) => (
+            <li key={i} className="flex items-start gap-3">
+              <div className="w-2 h-2 rounded-full bg-orange-400 mt-1.5 shrink-0" />
+              <p className="text-[12px] text-slate-600 leading-snug font-bold">{con}</p>
+            </li>
+          ))}
         </ul>
       </div>
     </div>
@@ -165,7 +191,9 @@ export const MobileProsConsWidget = () => {
 };
 
 export const MobileImprovementsWidget = () => {
-  const improvements = [
+  const apiData = getStoredData();
+
+  const defaultImprovements = [
     {
       title: "Strengthen LinkedIn Presence",
       description: "Add detailed project descriptions and gather skill endorsements.",
@@ -192,6 +220,25 @@ export const MobileImprovementsWidget = () => {
     }
   ];
 
+  let improvementsList = defaultImprovements;
+  if (apiData?.improvements) {
+    const sentences = splitSentences(apiData.improvements);
+    improvementsList = sentences.map((sent, i) => {
+      const styles = [
+        { impact: "High", impactColor: "bg-emerald-50 text-emerald-600 border-emerald-100" },
+        { impact: "Medium", impactColor: "bg-blue-50 text-blue-600 border-blue-100" },
+        { impact: "Medium", impactColor: "bg-violet-50 text-violet-600 border-violet-100" },
+        { impact: "Moderate", impactColor: "bg-amber-50 text-amber-600 border-amber-100" }
+      ];
+      const style = styles[i % styles.length];
+      return {
+        title: `Improvement Priority ${i + 1}`,
+        description: sent,
+        ...style
+      };
+    });
+  }
+
   return (
     <div className="lg:hidden mt-8 mb-28 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
       <div className="flex items-center gap-2.5 mb-4 px-1">
@@ -202,7 +249,7 @@ export const MobileImprovementsWidget = () => {
       </div>
       
       <div className="space-y-3">
-        {improvements.map((item, index) => (
+        {improvementsList.map((item, index) => (
           <div key={index} className="bg-white rounded-xl p-4 border border-slate-100/80 shadow-sm">
             <div className="flex items-center gap-2.5 mb-2">
               <div className="w-6 h-6 rounded-lg bg-violet-50 flex items-center justify-center border border-violet-100">

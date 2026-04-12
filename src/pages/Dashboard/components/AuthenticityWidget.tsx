@@ -1,10 +1,23 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { TrendingUp, Award } from 'lucide-react';
 
+const getStoredData = () => {
+  try {
+    const data = localStorage.getItem('trustscore_data');
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
+};
+
 export const AuthenticityWidget = () => {
+  const apiData = getStoredData();
+  const rawScore = apiData?.score ? apiData.score : 84.5;
+  const displayScore = Math.round(rawScore * 10); // scale up to 1000
+
   const scoreData = [
-    { name: 'Score', value: 845 },
-    { name: 'Remaining', value: 155 }
+    { name: 'Score', value: displayScore },
+    { name: 'Remaining', value: 1000 - displayScore }
   ];
 
   return (
@@ -44,7 +57,7 @@ export const AuthenticityWidget = () => {
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-5xl lg:text-6xl font-black text-white tracking-tighter leading-none">845</span>
+            <span className="text-5xl lg:text-6xl font-black text-white tracking-tighter leading-none">{displayScore}</span>
             <span className="text-[10px] font-bold text-blue-300/40 uppercase tracking-widest mt-1">/ 1000</span>
           </div>
         </div>

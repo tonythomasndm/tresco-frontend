@@ -104,7 +104,7 @@ const ConnectPages = () => {
            <div className="w-8 h-8 bg-[#0a152e] rounded flex items-center justify-center">
              <UserIcon className="w-5 h-5 text-blue-400" />
            </div>
-           <span className="text-lg font-bold tracking-tight text-blue-600">TrustScore</span>
+           <span className="text-lg font-bold tracking-tight text-blue-600">Tresco</span>
         </div>
         <button className="text-slate-500 hover:text-slate-800">
            <Search className="w-5 h-5" />
@@ -121,7 +121,7 @@ const ConnectPages = () => {
           <p className="text-sm leading-relaxed text-slate-500 sm:text-base">
             Synchronize your digital footprint to generate a high-fidelity
             recruitment profile. We aggregate data from these sources to build
-            your TrustScore.
+            your Tresco.
           </p>
         </div>
 

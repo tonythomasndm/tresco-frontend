@@ -1,14 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 const CTASection = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    setIsLoggedIn(!!user);
-  }, []);
+  const [isLoggedIn] = useState(() => !!localStorage.getItem("user"));
 
   return (
     <section id="how-it-works" className="w-full bg-white py-24 pb-32">

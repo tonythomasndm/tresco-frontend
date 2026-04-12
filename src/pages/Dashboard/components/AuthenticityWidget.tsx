@@ -13,6 +13,7 @@ const getStoredData = () => {
 export const AuthenticityWidget = () => {
   const apiData = getStoredData();
   const rawScore = apiData?.score ? apiData.score : 84.5;
+  console.log("raw score" + rawScore);
   const displayScore = Math.round(rawScore); // scale up to 1000
 
   const scoreData = [

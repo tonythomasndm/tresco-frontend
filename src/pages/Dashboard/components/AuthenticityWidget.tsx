@@ -1,5 +1,4 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { TrendingUp, Award } from "lucide-react";
 
 const getStoredData = () => {
   try {
@@ -12,13 +11,20 @@ const getStoredData = () => {
 
 export const AuthenticityWidget = () => {
   const apiData = getStoredData();
-  const rawScore = apiData?.score ? apiData.score : 84.5;
-  console.log("raw score" + rawScore);
-  const displayScore = Math.round(rawScore); // scale up to 1000
+  const rawScore = Number(apiData?.score);
+  const normalizedScore =
+    Number.isFinite(rawScore) && rawScore <= 100 ? rawScore * 10 : rawScore;
+  const displayScore = Math.max(
+    0,
+    Math.min(
+      1000,
+      Math.round(Number.isFinite(normalizedScore) ? normalizedScore : 845),
+    ),
+  );
 
   const scoreData = [
     { name: "Score", value: displayScore },
-    { name: "Remaining", value: 1000 - displayScore },
+    { name: "Remaining", value: Math.max(0, 1000 - displayScore) },
   ];
 
   return (
@@ -84,21 +90,6 @@ export const AuthenticityWidget = () => {
             connected platforms with verified contributions.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-            <div className="flex items-center gap-2 px-4 py-2 border bg-emerald-500/15 border-emerald-400/20 rounded-xl">
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
-              <span className="text-sm font-bold text-emerald-300">+12.3%</span>
-              <span className="text-[10px] text-emerald-300/60 font-medium">
-                vs last
-              </span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 border bg-white/5 border-white/10 rounded-xl">
-              <Award className="w-4 h-4 text-blue-300" />
-              <span className="text-sm font-bold text-blue-200">
-                Top 8% Cohort
-              </span>
-            </div>
-          </div>
         </div>
       </div>
     </div>

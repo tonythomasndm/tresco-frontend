@@ -120,13 +120,16 @@ export const PlatformWeightageWidget = () => {
     },
   ]
     .map((p) => {
-      const rawScore = getScore(p.key, p.defaultScore);
+      const rawScore = Number(getScore(p.key, p.defaultScore));
 
       if (rawScore === -1) return null;
+      const normalizedScore = rawScore > 100 ? rawScore / 10 : rawScore;
+
+      if (normalizedScore < 0) return null;
 
       return {
         ...p,
-        score: Math.round(rawScore / 10),
+        score: Math.max(0, Math.min(100, Math.round(normalizedScore))),
       };
     })
     .filter((p): p is NonNullable<typeof p> => p !== null);

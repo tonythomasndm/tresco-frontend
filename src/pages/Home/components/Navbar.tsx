@@ -39,7 +39,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   return (

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { FormEvent } from 'react';
 import { User, Mail, Lock, EyeOff, Eye, ArrowRight, ShieldCheck } from 'lucide-react';
 import FormInput from './FormInput';
@@ -276,8 +276,18 @@ const SignupForm = () => {
 
         <div className="mt-8 text-center">
           <p className="text-slate-600 text-[13px] font-medium">
-            <span className="hidden lg:inline">Already have an account? <a href="/login" className="font-extrabold text-[#0a152e] hover:underline">Sign in here</a></span>
-            <span className="inline lg:hidden">Already have an account? <a href="/login" className="font-extrabold text-[#0B1E43] hover:underline">Sign In</a></span>
+            <span className="hidden lg:inline">
+              Already have an account?{" "}
+              <Link to="/login" className="font-extrabold text-[#0a152e] hover:underline">
+                Sign in here
+              </Link>
+            </span>
+            <span className="inline lg:hidden">
+              Already have an account?{" "}
+              <Link to="/login" className="font-extrabold text-[#0B1E43] hover:underline">
+                Sign In
+              </Link>
+            </span>
           </p>
         </div>
 

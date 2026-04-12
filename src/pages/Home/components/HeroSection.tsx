@@ -1,15 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ArrowRight, Activity, ShieldCheck, BarChart3 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import heroImage from '../../../assets/hero_abstract_net.png';
 
 const HeroSection = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    setIsLoggedIn(!!user);
-  }, []);
+  const [isLoggedIn] = useState(() => !!localStorage.getItem("user"));
 
   return (
     <section className="relative w-full bg-gradient-to-b from-white via-white to-blue-50/30 pt-16 pb-24 lg:pt-24 lg:pb-36 overflow-hidden">

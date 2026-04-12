@@ -5,10 +5,7 @@ const HowItWorks = () => {
     {
       icon: <Link2 className="w-6 h-6 text-white" />,
       title: 'Connect',
-      step: '01',
-      description: 'Integrate your ATS or talent pool directly into the TrustScore engine with zero-config API connectors.',
-      gradient: 'from-blue-500 to-blue-600',
-      shadowColor: 'shadow-blue-500/25'
+      description: 'Integrate your ATS or talent pool directly into the Tresco engine with zero-config API connectors.'
     },
     {
       icon: <Sparkles className="w-6 h-6 text-white" />,

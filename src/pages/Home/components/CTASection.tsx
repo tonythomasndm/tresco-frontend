@@ -22,7 +22,7 @@ const CTASection = () => {
               Ready to hire with precision?
             </h2>
             <p className="text-[#a1bcdc] text-lg font-medium mb-10 max-w-2xl mx-auto">
-              Join 500+ forward-thinking teams using TrustScore to build high-performance cultures.
+              Join 500+ forward-thinking teams using Tresco to build high-performance cultures.
             </p>
             <Link 
               to={isLoggedIn ? "/connect" : "/login"} 

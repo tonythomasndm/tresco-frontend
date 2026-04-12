@@ -4,6 +4,7 @@ import type { FormEvent } from 'react';
 import { User, Mail, Lock, EyeOff, Eye, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
 import FormInput from './FormInput';
 import { supabase } from '../../configs/supaClient';
+import TermsModal from './TermsModal';
 
 const SignupForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,14 +12,14 @@ const SignupForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [terms, setTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [role, setRole] = useState<'candidate' | 'recruiter'>('candidate');
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password || !confirmPassword) {
       setError('Please fill in all fields.');
@@ -28,11 +29,12 @@ const SignupForm = () => {
       setError('Passwords do not match.');
       return;
     }
-    if (!terms) {
-      setError('You must agree to the terms and policies.');
-      return;
-    }
+    setError(null);
+    setIsTermsModalOpen(true);
+  };
 
+  const handleTermsAccept = async () => {
+    setIsTermsModalOpen(false);
     setLoading(true);
     setError(null);
 
@@ -66,7 +68,6 @@ const SignupForm = () => {
       setEmail('');
       setPassword('');
       setConfirmPassword('');
-      setTerms(false);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -228,27 +229,11 @@ const SignupForm = () => {
           </div>
           
 
-          <div className="pt-2 flex items-start lg:items-center gap-3 bg-[#f8fafc] lg:bg-transparent p-4 lg:p-0 rounded-xl lg:rounded-none border border-slate-100 lg:border-none">
-            <div className="flex items-center lg:h-5">
-              <div 
-                className={`w-[18px] h-[18px] flex items-center justify-center rounded-full lg:hidden flex-shrink-0 ${terms ? 'bg-blue-600' : 'border border-slate-300 bg-slate-100'}`}
-                onClick={() => setTerms(!terms)}
-              >
-                {terms && <ShieldCheck className="w-3 h-3 text-white" />}
-              </div>
-              <input 
-                id="terms" 
-                type="checkbox" 
-                className="hidden lg:block w-[18px] h-[18px] text-blue-600 border-slate-300 rounded focus:ring-blue-600 bg-slate-100 cursor-pointer" 
-                checked={terms}
-                onChange={(e) => setTerms(e.target.checked)}
-              />
-            </div>
-            <label htmlFor="terms" className="text-[12px] lg:text-xs text-slate-700 lg:text-slate-600 leading-relaxed cursor-pointer font-medium">
-              <span className="hidden lg:inline">I agree to the <a href="#" className="font-semibold transition-colors border-b border-transparent text-slate-900 hover:border-slate-900">Terms of Service</a> and <a href="#" className="font-semibold transition-colors border-b border-transparent text-slate-900 hover:border-slate-900">Privacy Policy</a>.</span>
-              <span className="inline lg:hidden text-slate-600 text-[11.5px]">By creating an account, you agree to our <a href="#" className="font-bold text-[#0B1E43]">Terms of Service</a> and acknowledge our <a href="#" className="font-bold text-[#0B1E43]">Privacy Policy</a>.</span>
-            </label>
-          </div>
+        <TermsModal 
+          isOpen={isTermsModalOpen} 
+          onClose={() => setIsTermsModalOpen(false)} 
+          onAccept={handleTermsAccept} 
+        />
 
           <div className="pt-3">
             <button 

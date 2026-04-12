@@ -102,7 +102,7 @@ const Navbar = () => {
           className="flex items-center gap-2 text-lg font-semibold cursor-pointer"
         >
           <img src="/Logo.svg" alt="logo" className="object-contain w-8 h-8" />
-          <span>TrustScore</span>
+          <span>Tresco</span>
         </div>
 
         {/* Desktop Nav */}

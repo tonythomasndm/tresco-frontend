@@ -20,7 +20,7 @@ const Processing = () => {
     { icon: <Search className="w-5 h-5" />, text: "Analyzing digital footprint..." },
     { icon: <Database className="w-5 h-5" />, text: "Aggregating platform data..." },
     { icon: <Fingerprint className="w-5 h-5" />, text: "Verifying authentic identity..." },
-    { icon: <Cpu className="w-5 h-5" />, text: "ML Model computing TrustScore..." },
+    { icon: <Cpu className="w-5 h-5" />, text: "ML Model computing Tresco..." },
     { icon: <Shield className="w-5 h-5" />, text: "Finalizing security audit..." }
   ];
 
@@ -127,7 +127,7 @@ const Processing = () => {
            <div className="w-4 h-4 bg-white/10 rounded flex items-center justify-center">
              <Shield className="w-2 h-2 text-white" />
            </div>
-           <span className="font-bold text-[10px] text-white tracking-widest uppercase">TrustScore Engine v1.0</span>
+           <span className="font-bold text-[10px] text-white tracking-widest uppercase">Tresco Engine v1.0</span>
         </div>
       </div>
     </div>

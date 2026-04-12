@@ -19,7 +19,7 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-wider mb-6 border border-blue-100">
-              TRUSTSCORE INTELLIGENCE
+              TRESCO INTELLIGENCE
             </div>
             
             <h1 className="text-[42px] sm:text-[52px] lg:text-[64px] font-extrabold tracking-tight text-[#0a152e] leading-[1.1] mb-6">

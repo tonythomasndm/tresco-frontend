@@ -63,7 +63,7 @@ const Profile = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 12h4l3-9 5 18 3-9h3" />
             </svg>
           </div>
-          <span className="font-bold text-lg tracking-tight hidden sm:inline">TrustScore</span>
+          <span className="font-bold text-lg tracking-tight hidden sm:inline">Tresco</span>
         </div>
         <button
           onClick={handleLogout}

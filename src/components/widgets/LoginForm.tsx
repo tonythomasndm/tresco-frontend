@@ -4,6 +4,7 @@ import { Mail, Lock, EyeOff, Eye, ArrowRight, Loader2 } from 'lucide-react';
 import FormInput from './FormInput';
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from '../../configs/supaClient';
+import TermsModal from './TermsModal';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -13,14 +14,20 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       setError('Please fill in all fields.');
       return;
     }
+    setError(null);
+    setIsTermsModalOpen(true);
+  };
 
+  const handleTermsAccept = async () => {
+    setIsTermsModalOpen(false);
     setLoading(true);
     setError(null);
 
@@ -82,6 +89,12 @@ const LoginForm = () => {
             Login successful! Welcome back.
           </div>
         )}
+
+        <TermsModal 
+          isOpen={isTermsModalOpen} 
+          onClose={() => setIsTermsModalOpen(false)} 
+          onAccept={handleTermsAccept} 
+        />
 
         <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-5">
           <FormInput
@@ -176,7 +189,7 @@ const LoginForm = () => {
 
         {/* Copyright (Desktop Only) */}
         {/* <div className="absolute bottom-8 left-0 w-full hidden lg:flex justify-start ml-[10%] text-[9px] uppercase tracking-[0.1em] text-slate-400 font-bold">
-           © 2024 TRUSTSCORE, ALL RIGHTS RESERVED.
+           © 2024 TRESCO, ALL RIGHTS RESERVED.
         </div> */}
       </div>
     </div>

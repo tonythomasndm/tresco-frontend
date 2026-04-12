@@ -1,49 +1,70 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
-const PlatformRing = ({ score, name }: { score: number, name: string }) => {
-  const data = [
-    { value: score },
-    { value: 100 - score }
-  ];
+const platforms = [
+  { name: 'LeetCode',      score: 92, color: '#eab308', bg: 'bg-yellow-50', border: 'border-yellow-100' },
+  { name: 'GitHub',         score: 88, color: '#8b5cf6', bg: 'bg-violet-50', border: 'border-violet-100' },
+  { name: 'LinkedIn',       score: 74, color: '#3b82f6', bg: 'bg-blue-50',   border: 'border-blue-100' },
+  { name: 'StackOverflow',  score: 65, color: '#f97316', bg: 'bg-orange-50', border: 'border-orange-100' },
+  { name: 'HackerRank',     score: 78, color: '#10b981', bg: 'bg-emerald-50', border: 'border-emerald-100' },
+];
+
+const PlatformCard = ({ name, score, color, bg, border }: { name: string; score: number; color: string; bg: string; border: string }) => {
+  const data = [{ value: score }, { value: 100 - score }];
+
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-18 h-18 relative transition-transform hover:scale-110 duration-300">
+    <div className={`${bg} ${border} border rounded-2xl p-5 flex flex-col items-center text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group`}>
+      {/* Donut */}
+      <div className="w-20 h-20 relative mb-3">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius="72%"
+              innerRadius="68%"
               outerRadius="100%"
               startAngle={90}
               endAngle={-270}
               dataKey="value"
               stroke="none"
+              isAnimationActive={true}
             >
-              <Cell fill="#1a365d" />
-              <Cell fill="#f1f5f9" />
+              <Cell fill={color} />
+              <Cell fill="#e2e8f0" />
             </Pie>
           </PieChart>
         </ResponsiveContainer>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-[11px] font-black text-[#1a365d] tracking-tighter">{score}</span>
+          <span className="text-lg font-black text-slate-800">{score}</span>
         </div>
       </div>
-      <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-4 text-center">{name}</span>
+
+      {/* Name + Progress */}
+      <h4 className="text-xs font-extrabold text-slate-700 tracking-tight mb-2">{name}</h4>
+      <div className="w-full flex items-center gap-2">
+        <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-700"
+            style={{ width: `${score}%`, backgroundColor: color }}
+          />
+        </div>
+        <span className="text-[10px] font-bold text-slate-400">{score}%</span>
+      </div>
     </div>
   );
 };
 
 export const PlatformWeightageWidget = () => {
   return (
-    <div className="bg-white rounded-[1.5rem] p-8 shadow-sm border border-slate-100/80 h-full">
-      <h3 className="text-[9px] text-[#1a365d] font-black tracking-[0.2em] uppercase mb-10 text-center lg:text-left">Platform Weightage</h3>
-      <div className="grid grid-cols-2 gap-y-10 gap-x-4">
-         <PlatformRing score={92} name="Leet Code" />
-         <PlatformRing score={88} name="GitHub" />
-         <PlatformRing score={74} name="LinkedIn" />
-         <PlatformRing score={65} name="StackOverflow" />
+    <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-sm font-extrabold text-[#0a152e] tracking-tight">Platform Weightage</h3>
+        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{platforms.length} Sources</span>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        {platforms.map((p) => (
+          <PlatformCard key={p.name} name={p.name} score={p.score} color={p.color} bg={p.bg} border={p.border} />
+        ))}
       </div>
     </div>
   );

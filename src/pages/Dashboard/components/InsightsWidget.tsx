@@ -1,86 +1,139 @@
-import { CheckCircle2, AlertTriangle, Fingerprint } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, Lightbulb, TrendingUp, ArrowRight } from 'lucide-react';
 
 export const InsightListsWidget = () => {
+  const pros = [
+    "Zero-Friction Transition from theory to implementation",
+    "Exceptional Algorithmic Density scores across platforms",
+    "Verified proficiency in Distributed Systems design"
+  ];
+
+  const cons = [
+    "Low Network Resonance — LinkedIn profile is sparse",
+    "Minimal Peer Endorsements relative to technical skill",
+    "Limited public Mentorship or community leadership indicators"
+  ];
+
   return (
-    <div className="grid md:grid-cols-2 gap-8 mt-10">
+    <div className="grid md:grid-cols-2 gap-6">
       
-      {/* Key Strengths */}
-      <div className="bg-white rounded-[1.5rem] p-8 shadow-sm border border-slate-100/80 h-full transition-transform hover:scale-[1.01]">
-        <div className="flex items-center gap-3 mb-8">
-           <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100">
-             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5 text-emerald-600 stroke-[3]">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-             </svg>
-           </div>
-           <h3 className="font-black text-[#1a365d] text-lg tracking-tight">Key Strengths</h3>
+      {/* Pros */}
+      <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60 hover:shadow-md transition-shadow">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <CheckCircle2 className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="text-base font-extrabold text-[#0a152e] tracking-tight">Pros</h3>
+            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest">{pros.length} strengths found</p>
+          </div>
         </div>
         
-        <ul className="space-y-5">
-          <li className="flex items-start gap-4">
-             <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
-             <p className="text-[13px] text-slate-600 leading-snug font-bold">Zero-Friction Transition from theory to implementation</p>
-          </li>
-          <li className="flex items-start gap-4">
-             <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
-             <p className="text-[13px] text-slate-600 leading-snug font-bold">Exceptional Algorithmic Density scores</p>
-          </li>
-          <li className="flex items-start gap-4">
-             <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
-             <p className="text-[13px] text-slate-600 leading-snug font-bold">Verified proficiency in Distributed Systems</p>
-          </li>
-        </ul>
+        <div className="space-y-3">
+          {pros.map((item, i) => (
+            <div key={i} className="flex items-start gap-3 bg-emerald-50/50 border border-emerald-100/60 rounded-xl p-4 hover:bg-emerald-50 transition-colors">
+              <CheckCircle2 className="w-4.5 h-4.5 text-emerald-500 mt-0.5 shrink-0" />
+              <p className="text-[13px] text-slate-700 leading-relaxed font-medium">{item}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Risk Considerations */}
-      <div className="bg-white rounded-[1.5rem] p-8 shadow-sm border border-slate-100/80 h-full transition-transform hover:scale-[1.01]">
-        <div className="flex items-center gap-3 mb-8">
-           <div className="w-10 h-10 rounded-2xl bg-orange-50 flex items-center justify-center border border-orange-100">
-             <AlertTriangle className="w-5 h-5 text-orange-500 stroke-[3]" />
-           </div>
-           <h3 className="font-black text-[#1a365d] text-lg tracking-tight">Risk Considerations</h3>
+      {/* Cons */}
+      <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60 hover:shadow-md transition-shadow">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
+            <AlertTriangle className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="text-base font-extrabold text-[#0a152e] tracking-tight">Cons</h3>
+            <p className="text-[10px] text-orange-600 font-bold uppercase tracking-widest">{cons.length} concerns flagged</p>
+          </div>
         </div>
         
-        <ul className="space-y-5">
-          <li className="flex items-start gap-4">
-             <div className="w-2.5 h-2.5 rounded-full bg-orange-400 mt-1.5 shrink-0" />
-             <p className="text-[13px] text-slate-600 leading-snug font-bold">Low Network Resonance (LinkedIn profile sparse)</p>
-          </li>
-          <li className="flex items-start gap-4">
-             <div className="w-2.5 h-2.5 rounded-full bg-orange-400 mt-1.5 shrink-0" />
-             <p className="text-[13px] text-slate-600 leading-snug font-bold">Minimal Peer Endorsements relative to technical skill</p>
-          </li>
-          <li className="flex items-start gap-4">
-             <div className="w-2.5 h-2.5 rounded-full bg-orange-400 mt-1.5 shrink-0" />
-             <p className="text-[13px] text-slate-600 leading-snug font-bold">Limited public Mentorship indicators</p>
-          </li>
-        </ul>
+        <div className="space-y-3">
+          {cons.map((item, i) => (
+            <div key={i} className="flex items-start gap-3 bg-orange-50/50 border border-orange-100/60 rounded-xl p-4 hover:bg-orange-50 transition-colors">
+              <div className="w-2 h-2 rounded-full bg-orange-400 mt-2 shrink-0" />
+              <p className="text-[13px] text-slate-700 leading-relaxed font-medium">{item}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
     </div>
   );
 };
 
-export const IntegrityVerifiedCard = () => {
-  return (
-    <div className="bg-[#1a365d] rounded-[1.5rem] p-8 shadow-xl shadow-blue-900/10 relative overflow-hidden h-full flex flex-col justify-between group">
-       {/* Background accent abstract */}
-       <div className="absolute right-0 top-0 opacity-40 pointer-events-none transition-transform group-hover:scale-110 duration-700" style={{ width: '150%', height: '150%', transform: 'translate(20%, -20%)'}}>
-         <div style={{ backgroundImage: 'radial-gradient(circle at center, rgba(147, 197, 253, 0.25) 0%, transparent 60%)', width: '100%', height: '100%' }}></div>
-       </div>
+export const ImprovementsWidget = () => {
+  const improvements = [
+    {
+      title: "Strengthen LinkedIn Presence",
+      description: "Add detailed project descriptions, gather 5+ skill endorsements, and publish technical articles.",
+      impact: "High",
+      color: "from-emerald-500 to-teal-600",
+      badgeBg: "bg-emerald-100 text-emerald-700"
+    },
+    {
+      title: "Increase Open Source Contributions",
+      description: "Contribute to 2-3 active open source projects to demonstrate collaboration skills.",
+      impact: "Medium",
+      color: "from-blue-500 to-indigo-600",
+      badgeBg: "bg-blue-100 text-blue-700"
+    },
+    {
+      title: "Build Peer Network",
+      description: "Engage in code reviews, mentor juniors, and participate in tech communities.",
+      impact: "Medium",
+      color: "from-violet-500 to-purple-600",
+      badgeBg: "bg-violet-100 text-violet-700"
+    },
+    {
+      title: "Diversify Platform Activity",
+      description: "Answer on Stack Overflow and participate in HackerRank challenges regularly.",
+      impact: "Moderate",
+      color: "from-amber-500 to-orange-600",
+      badgeBg: "bg-amber-100 text-amber-700"
+    }
+  ];
 
-       <div className="relative z-10">
-         <div className="flex items-center justify-between mb-8">
-           <h3 className="text-white font-black text-sm uppercase tracking-widest">Integrity Verified</h3>
-           <Fingerprint className="text-blue-300 w-6 h-6 opacity-80" />
-         </div>
-         <p className="text-[13px] text-blue-100/70 leading-relaxed font-bold">
-           Cross-domain cross-referencing audit completed 2 hours ago.
-         </p>
-       </div>
-       
-       <button className="relative z-10 bg-white/10 hover:bg-white/20 transition-all text-white text-[10px] font-black tracking-[0.2em] uppercase py-3 px-6 rounded-xl self-start mt-8 w-auto border border-white/10 shadow-lg backdrop-blur-md active:scale-95">
-         View Full Log
-       </button>
+  return (
+    <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60 hover:shadow-md transition-shadow">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/20">
+            <Lightbulb className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="text-base font-extrabold text-[#0a152e] tracking-tight">Improvements</h3>
+            <p className="text-[10px] text-violet-600 font-bold uppercase tracking-widest">Actionable recommendations</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        {improvements.map((item, index) => (
+          <div 
+            key={index}
+            className="bg-[#fafbfc] rounded-2xl p-5 border border-slate-100 hover:border-slate-200 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group cursor-default"
+          >
+            <div className="flex items-start gap-3 mb-3">
+              <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform`}>
+                <TrendingUp className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-bold text-[#0a152e] leading-tight">{item.title}</h4>
+                <p className="text-[12px] text-slate-400 leading-relaxed mt-1">{item.description}</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100/80">
+              <span className={`text-[9px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider ${item.badgeBg}`}>
+                {item.impact} Impact
+              </span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -12,11 +12,12 @@ import {
   User as UserIcon,
   CheckCircle2,
   AlertCircle,
-  Trophy,
-  Loader2
-} from 'lucide-react';
-import { parseResumeForLinks, type ExtractedLinks } from '../../utils/resumeParser';
-import { savePlatformAccounts } from '../../utils/platformAccounts';
+  Terminal,
+} from "lucide-react";
+import {
+  parseResumeForLinks,
+  type ExtractedLinks,
+} from "../../utils/resumeParser";
 
 const ConnectPages = () => {
   const navigate = useNavigate();
@@ -26,19 +27,17 @@ const ConnectPages = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [links, setLinks] = useState<ExtractedLinks>({
-    linkedin: '',
-    github: '',
-    kaggle: '',
-    leetcode: '',
-    hackerrank: '',
-    stackoverflow: '',
-    behance: '',
-    personalWebsite: '',
-    other: []
+    linkedin: "",
+    github: "",
+    hackerrank: "",
+    leetcode: "",
+    stackoverflow: "",
+    behance: "",
+    personalWebsite: "",
+    other: [],
   });
 
   const [additionalRepos, setAdditionalRepos] = useState({
-    stackoverflow: false,
     behance: false,
     personalWebsite: false,
     otherUrl: false,
@@ -65,7 +64,6 @@ const ConnectPages = () => {
 
       // Update additional toggles based on what was found
       setAdditionalRepos({
-        stackoverflow: !!extractedLinks.stackoverflow,
         behance: !!extractedLinks.behance,
         personalWebsite: !!extractedLinks.personalWebsite,
         otherUrl: extractedLinks.other.length > 0,
@@ -251,28 +249,57 @@ const ConnectPages = () => {
             </div>
           </div>
 
-          {/* Kaggle Card */}
+          {/* StackOverflow Card */}
           <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
             <div className="flex items-center gap-3 mb-4">
-               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-50">
-                  <Database className="w-5 h-5 text-cyan-600" />
-               </div>
-               <div>
-                 <h3 className="font-bold text-slate-800">Kaggle</h3>
-                 <p className="text-xs text-slate-500 mt-0.5">Fetch data science rankings and competition results.</p>
-               </div>
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-orange-50">
+                <Database className="w-5 h-5 text-orange-600" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800">StackOverflow</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Showcase community contributions and expertise.
+                </p>
+              </div>
             </div>
             <div className="mt-4">
-               <input 
-                 type="url" 
-                 placeholder="kaggle.com/username"
-                 value={links.kaggle}
-                 onChange={(e) => handleChange('kaggle', e.target.value)}
-                 className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
-               />
-               <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
-                 {links.kaggle ? 'Link Added' : 'Add link'}
-               </button>
+              <input
+                type="url"
+                placeholder="stackoverflow.com/users/..."
+                value={links.stackoverflow}
+                onChange={(e) => handleChange("stackoverflow", e.target.value)}
+                className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+              />
+              <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                {links.stackoverflow ? "Link Added" : "Add link"}
+              </button>
+            </div>
+          </div>
+
+          {/* HackerRank Card */}
+          <div className="p-5 bg-white border shadow-sm rounded-2xl sm:p-6 border-slate-100">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-50">
+                <Terminal className="w-5 h-5 text-emerald-600" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800">HackerRank</h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Verify coding certifications and challenge scores.
+                </p>
+              </div>
+            </div>
+            <div className="mt-4">
+              <input
+                type="url"
+                placeholder="hackerrank.com/profile/username"
+                value={links.hackerrank}
+                onChange={(e) => handleChange("hackerrank", e.target.value)}
+                className="w-full px-4 py-3 text-sm font-medium transition-all border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-700 placeholder:text-slate-400 placeholder:font-normal"
+              />
+              <button className="w-full py-3 mt-3 text-sm font-semibold transition-colors bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl">
+                {links.hackerrank ? "Link Added" : "Add link"}
+              </button>
             </div>
           </div>
 
@@ -360,25 +387,6 @@ const ConnectPages = () => {
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() =>
-                  setAdditionalRepos((p) => ({
-                    ...p,
-                    stackoverflow: !p.stackoverflow,
-                  }))
-                }
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
-                  additionalRepos.stackoverflow
-                    ? "bg-blue-50 border-blue-200 text-blue-700"
-                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-                }`}
-              >
-                <Database className="w-4 h-4" /> Stack Overflow
-                {additionalRepos.stackoverflow && (
-                  <CheckCircle2 className="w-3.5 h-3.5 ml-1" />
-                )}
-              </button>
-
-              <button
-                onClick={() =>
                   setAdditionalRepos((p) => ({ ...p, behance: !p.behance }))
                 }
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
@@ -393,71 +401,93 @@ const ConnectPages = () => {
                 )}
               </button>
 
-             <div className="mt-5 space-y-3">
-               {additionalRepos.stackoverflow && (
-                 <input 
-                   type="url" 
-                   placeholder="stackoverflow.com/users/..."
-                   value={links.stackoverflow}
-                   onChange={(e) => handleChange('stackoverflow', e.target.value)}
-                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                 />
-               )}
-               {additionalRepos.behance && (
-                 <input 
-                   type="url" 
-                   placeholder="behance.net/..."
-                   value={links.behance}
-                   onChange={(e) => handleChange('behance', e.target.value)}
-                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                 />
-               )}
-               {additionalRepos.personalWebsite && (
-                 <input 
-                   type="url" 
-                   placeholder="https://yourwebsite.com"
-                   value={links.personalWebsite}
-                   onChange={(e) => handleChange('personalWebsite', e.target.value)}
-                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                 />
-               )}
-               {additionalRepos.otherUrl && (
-                 <input 
-                   type="url" 
-                   placeholder="https://other-portfolio.com"
-                   value={links.other[0] || ''}
-                   onChange={(e) => {
-                     const newOther = [...links.other];
-                     newOther[0] = e.target.value;
-                     setLinks(p => ({ ...p, other: newOther }));
-                   }}
-                   className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                 />
-               )}
-             </div>
+              <button
+                onClick={() =>
+                  setAdditionalRepos((p) => ({
+                    ...p,
+                    personalWebsite: !p.personalWebsite,
+                  }))
+                }
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
+                  additionalRepos.personalWebsite
+                    ? "bg-blue-50 border-blue-200 text-blue-700"
+                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                <UserIcon className="w-4 h-4" /> Personal Website
+                {additionalRepos.personalWebsite && (
+                  <CheckCircle2 className="w-3.5 h-3.5 ml-1" />
+                )}
+              </button>
+
+              <button
+                onClick={() =>
+                  setAdditionalRepos((p) => ({ ...p, otherUrl: !p.otherUrl }))
+                }
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-colors ${
+                  additionalRepos.otherUrl
+                    ? "bg-blue-50 border-blue-200 text-blue-700"
+                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                }`}
+              >
+                <Plus className="w-4 h-4" /> Other URL
+                {additionalRepos.otherUrl && (
+                  <CheckCircle2 className="w-3.5 h-3.5 ml-1" />
+                )}
+              </button>
+            </div>
+
+            {/* Expanded Inputs based on toggles */}
+            <div className="mt-5 space-y-3">
+              {additionalRepos.behance && (
+                <input
+                  type="url"
+                  placeholder="behance.net/..."
+                  value={links.behance}
+                  onChange={(e) => handleChange("behance", e.target.value)}
+                  className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                />
+              )}
+              {additionalRepos.personalWebsite && (
+                <input
+                  type="url"
+                  placeholder="https://yourwebsite.com"
+                  value={links.personalWebsite}
+                  onChange={(e) =>
+                    handleChange("personalWebsite", e.target.value)
+                  }
+                  className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                />
+              )}
+              {additionalRepos.otherUrl && (
+                <input
+                  type="url"
+                  placeholder="https://other-portfolio.com"
+                  value={links.other[0] || ""}
+                  onChange={(e) => {
+                    const newOther = [...links.other];
+                    newOther[0] = e.target.value;
+                    setLinks((p) => ({ ...p, other: newOther }));
+                  }}
+                  className="w-full px-4 py-2 text-sm border bg-slate-50 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                />
+              )}
+            </div>
           </div>
           
           <div className="flex justify-end gap-4 pt-6 pb-20">
-             <button
-               onClick={() => navigate('/processing')}
-               className="px-6 py-3 font-medium transition-colors bg-white border rounded-xl text-slate-600 border-slate-200 hover:bg-slate-50"
-             >
-               Skip
-             </button>
-             <button
-               onClick={handleSave}
-               disabled={isSaving}
-               className="px-6 py-3 font-medium text-white transition-colors bg-blue-600 shadow-sm rounded-xl hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
-             >
-               {isSaving ? (
-                 <>
-                   <Loader2 className="w-4 h-4 animate-spin" />
-                   Saving...
-                 </>
-               ) : (
-                 'Save Changes'
-               )}
-             </button>
+            <button
+              onClick={() => navigate(-1)}
+              className="px-6 py-3 font-medium transition-colors bg-white border rounded-xl text-slate-600 border-slate-200 hover:bg-slate-50"
+            >
+              Skip
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-6 py-3 font-medium text-white transition-colors bg-blue-600 shadow-sm rounded-xl hover:bg-blue-700"
+            >
+              Save Changes
+            </button>
           </div>
         </div>
       </main>

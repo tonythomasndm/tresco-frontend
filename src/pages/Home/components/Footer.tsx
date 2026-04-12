@@ -6,7 +6,7 @@ const Footer = () => {
   const [showContact, setShowContact] = useState(false);
 
   return (
-    <footer className="w-full bg-[#f8fafc] border-t border-slate-200 py-16">
+    <footer className="w-full bg-gradient-to-b from-white to-slate-50 border-t border-slate-200/50 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-8 mb-16">
@@ -15,12 +15,12 @@ const Footer = () => {
             <Link to="/" className="text-xl font-black text-[#0a152e] tracking-tight block mb-4">
                Tresco
             </Link>
-            <p className="text-[13px] font-medium text-slate-500 leading-relaxed pr-4">
-              The premier metrics for the future of work. Build high-performance cultures, clarify user intent.
+            <p className="text-[13px] font-medium text-slate-400 leading-relaxed pr-4">
+              The premier metrics platform for the future of work. Build high-performance cultures with data-driven precision.
             </p>
           </div>
 
-          {/* Links Cols */}
+          {/* Links */}
           <div className="col-span-1 md:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-8">
             <div className="flex flex-col gap-3">
               <h4 className="text-[10px] font-bold tracking-widest text-slate-400 uppercase mb-2">Platform</h4>
@@ -85,7 +85,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-slate-200/80 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[12px] font-medium text-slate-400">
             &copy; {new Date().getFullYear()} Tresco. All rights reserved. Precision in every metric.
           </p>

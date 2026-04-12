@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react';
-import { TopNav } from './components/TopNav';
-import { SideNav } from './components/SideNav';
 import { AuthenticityWidget } from './components/AuthenticityWidget';
-import { TrustMatrixWidget } from './components/TrustMatrixWidget';
 import { PlatformWeightageWidget } from './components/PlatformWeightageWidget';
-import { InsightListsWidget, IntegrityVerifiedCard } from './components/InsightsWidget';
-import { ActionBanner } from './components/ActionBanner';
+import { InsightListsWidget, ImprovementsWidget } from './components/InsightsWidget';
+import { Download } from 'lucide-react';
 import { 
   MobileTopNav, 
   MobileAuthenticityWidget, 
-  AttributeComparisonWidget, 
   MobileSourceHealthWidget, 
-  MobileKeyInsightWidget, 
+  MobileProsConsWidget,
+  MobileImprovementsWidget,
   MobileBottomNav 
 } from './components/MobileDashboardWidgets';
 
@@ -27,15 +24,19 @@ const Dashboard = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  const handleDownloadPDF = () => {
+    window.print();
+  };
+
   if (isMobile) {
     return (
       <div className="flex flex-col min-h-screen pb-24 font-sans bg-slate-50">
         <MobileTopNav />
         <main className="flex-1 px-4 py-2 space-y-4">
           <MobileAuthenticityWidget />
-          <AttributeComparisonWidget />
           <MobileSourceHealthWidget />
-          <MobileKeyInsightWidget />
+          <MobileProsConsWidget />
+          <MobileImprovementsWidget />
         </main>
         <MobileBottomNav />
       </div>
@@ -43,49 +44,41 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen font-sans bg-white">
-      <TopNav />
-      
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar matches screenshot layout */}
-        <SideNav />
+    <div className="min-h-screen font-sans bg-[#f0f2f5]">
+      {/* Main Content */}
+      <main className="max-w-[1440px] mx-auto px-8 lg:px-12 py-8 space-y-6">
         
-        {/* Main Content Area */}
-        <main className="flex-1 p-8 overflow-y-auto bg-slate-50/20 lg:p-10">
-          <div className="max-w-[1400px] mx-auto">
-            
-            <div className="grid grid-cols-12 gap-6 lg:gap-8">
-              {/* Row 1: Metrics & Weightage */}
-              <div className="col-span-12 lg:col-span-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                <AuthenticityWidget />
-              </div>
-              <div className="col-span-12 lg:col-span-4 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-                <PlatformWeightageWidget />
-              </div>
+        {/* Export Button */}
+        <div className="flex justify-end print:hidden">
+          <button
+            onClick={handleDownloadPDF}
+            className="flex items-center gap-2 bg-[#0f1d35] hover:bg-[#1a365d] text-white text-[10px] font-bold uppercase tracking-widest px-5 py-2.5 rounded-xl transition-all shadow-md active:scale-95"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Export PDF
+          </button>
+        </div>
 
-              {/* Row 2: Radar Chart & Verification */}
-              <div className="col-span-12 lg:col-span-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                <TrustMatrixWidget />
-              </div>
-              <div className="col-span-12 lg:col-span-4 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
-                <div className="h-full">
-                  <IntegrityVerifiedCard />
-                </div>
-              </div>
+        {/* Row 1: Score Hero (full width) */}
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
+          <AuthenticityWidget />
+        </div>
 
-              {/* Row 3: Insights */}
-              <div className="col-span-12 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                <InsightListsWidget />
-              </div>
+        {/* Row 2: Platform Weightage (full width) */}
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+          <PlatformWeightageWidget />
+        </div>
 
-              {/* Row 4: Action Banner */}
-              <div className="col-span-12 animate-fade-in-up" style={{ animationDelay: '0.35s' }}>
-                <ActionBanner />
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
+        {/* Row 3: Pros & Cons */}
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
+          <InsightListsWidget />
+        </div>
+
+        {/* Row 4: Improvements */}
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+          <ImprovementsWidget />
+        </div>
+      </main>
     </div>
   );
 };

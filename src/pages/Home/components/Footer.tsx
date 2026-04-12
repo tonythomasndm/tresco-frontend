@@ -59,8 +59,8 @@ const Footer = () => {
                         </div>
                         <div>
                           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Email</p>
-                          <a href="mailto:lakshaymittalkdb05@gmail.com" className="text-[12px] font-semibold text-slate-700 hover:text-blue-600 transition-colors">
-                            lakshaymittalkdb05@gmail.com
+                          <a href="mailto:lakshaymittal@tresco.firm.in" className="text-[12px] font-semibold text-slate-700 hover:text-blue-600 transition-colors">
+                           lakshaymittal@tresco.firm.in
                           </a>
                         </div>
                       </div>

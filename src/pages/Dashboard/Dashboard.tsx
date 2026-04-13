@@ -12,7 +12,6 @@ import {
   MobileSourceHealthWidget,
   MobileProsConsWidget,
   MobileImprovementsWidget,
-  MobileBottomNav,
 } from "./components/MobileDashboardWidgets";
 
 const Dashboard = () => {
@@ -33,7 +32,7 @@ const Dashboard = () => {
 
   if (isMobile) {
     return (
-      <div className="flex flex-col min-h-screen pb-24 font-sans bg-slate-50">
+      <div className="flex flex-col min-h-screen pb-8 font-sans bg-slate-50">
         <MobileTopNav />
         <main className="flex-1 px-4 py-2 space-y-4">
           <MobileAuthenticityWidget />
@@ -41,7 +40,6 @@ const Dashboard = () => {
           <MobileProsConsWidget />
           <MobileImprovementsWidget />
         </main>
-        <MobileBottomNav />
       </div>
     );
   }
